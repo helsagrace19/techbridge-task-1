@@ -32,7 +32,7 @@ Open `index.html` in any modern browser. No build step or dependencies are requi
 
 ## Deployment
 
-Deployed via GitHub Pages: https://helsagrace19.github.io/techbridge-task-1/
+Deployed via GitHub Pages: https://techbridge-task-1-plum.vercel.app
 
 ## Responsive behaviour
 
