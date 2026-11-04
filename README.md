@@ -21,7 +21,7 @@ techbridge-task-1/
 ├── script.js           # Mobile navigation toggle only
 ├── images/
 │   ├── techbridge-logo.png          # Official TechBridge logo
-│   ├── internship-illustration.png  # Internship section illustration
+│   └── internship-illustration.png  # Internship section illustration
 ├── homepage-screenshot.png          # Screenshot of the completed homepage
 └── README.md
 ```
@@ -32,11 +32,11 @@ Open `index.html` in any modern browser. No build step or dependencies are requi
 
 ## Deployment
 
-Deployed via GitHub Pages: *(live URL added after deployment)*
+Deployed via GitHub Pages: https://helsagrace19.github.io/techbridge-task-1/
 
 ## Responsive behaviour
 
-- **Desktop (≥ 981px):** two-column hero, side-by-side section layouts
+- **Desktop (≥ 981px):** centered hero stage panel, side-by-side section layouts
 - **Tablet (641–980px):** stacked sections, mobile-style navigation menu
 - **Mobile (≤ 640px):** single-column layout, full-width buttons and cards
 
