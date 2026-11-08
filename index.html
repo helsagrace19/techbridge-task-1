@@ -34,7 +34,7 @@
         <ul class="nav-list">
           <li><a href="#home" class="is-active" aria-current="page">Home</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="#programs">Programs</a></li>
+          <li><a href="programs.html">Programs</a></li>
           <li><a href="#internship">Internship</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
@@ -52,6 +52,8 @@
       </a>
     </div>
   </header>
+
+  <div class="nav-backdrop" aria-hidden="true"></div>
 
   <main id="main">
     <!-- Hero -->
@@ -71,7 +73,7 @@
             <p class="lede">TechBridge is a learning and career development initiative by Baselink Services Limited, designed to equip you with in-demand skills and hands-on experience.</p>
 
             <div class="hero-actions">
-              <a class="btn btn--primary" href="#programs">
+              <a class="btn btn--primary" href="programs.html">
                 Explore Programs
                 <span class="btn__arrow" aria-hidden="true">→</span>
               </a>
@@ -100,7 +102,13 @@
         </div>
 
         <div class="about-programs" id="programs" aria-labelledby="programs-title">
-          <h2 class="subheading" id="programs-title">Our Programs</h2>
+          <div class="subheading-row">
+            <h2 class="subheading" id="programs-title">Our Programs</h2>
+            <a class="text-link" href="programs.html">
+              View all programs
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
           <div class="program-cards">
             <article class="program-card">
               <span class="program-icon" aria-hidden="true">
@@ -110,7 +118,7 @@
                   <rect x="16" y="4" width="4" height="16" rx="1"/>
                 </svg>
               </span>
-              <h3>Data Analytics</h3>
+              <h3><a class="program-card__link" href="programs.html#data-analytics">Data Analytics</a></h3>
               <p>Turn data into insights and make an impact.</p>
               <span class="program-arrow" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" focusable="false">
@@ -128,7 +136,7 @@
                   <path d="m13.5 5.5-3 13"/>
                 </svg>
               </span>
-              <h3>Web Development</h3>
+              <h3><a class="program-card__link" href="programs.html#web-development">Web Development</a></h3>
               <p>Build modern web applications and more.</p>
               <span class="program-arrow" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" focusable="false">
@@ -312,7 +320,7 @@
             <ul>
               <li><a href="#home">Home</a></li>
               <li><a href="#about">About</a></li>
-              <li><a href="#programs">Programs</a></li>
+              <li><a href="programs.html">Programs</a></li>
             </ul>
             <ul>
               <li><a href="#internship">Internship</a></li>
