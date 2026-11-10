@@ -1376,6 +1376,7 @@ ol {
   }
 
   .cta-band {
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 1.75rem;
@@ -2087,25 +2088,63 @@ ol {
 }
 
 /* ---------- Programs page responsive ---------- */
-@media (max-width: 900px) {
+@media (max-width: 980px) {
+  .prog-hero__copy h1 {
+    font-size: clamp(2.3rem, 4.6vw, 3.2rem);
+  }
+
+  .path-card,
+  .compare-panel,
+  .shared-foundation {
+    border-radius: 24px;
+  }
+}
+
+/* Tablet: keep two columns so the page fills the width */
+@media (min-width: 769px) and (max-width: 980px) {
   .prog-hero__grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2.25rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.94fr);
+    gap: clamp(1.5rem, 3vw, 2.25rem);
   }
 
   .prog-hero__copy h1 {
-    max-width: 20ch;
+    max-width: 13ch;
+  }
+
+  .prog-hero__lede {
+    max-width: none;
+  }
+
+  .prog-hero__meta {
+    gap: 1rem;
   }
 
   .pathway-card {
-    max-width: 620px;
+    max-width: none;
+  }
+}
+
+/* Phone and small tablet: one column with full width content */
+@media (max-width: 768px) {
+  .prog-hero__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.85rem;
+  }
+
+  .prog-hero__copy h1 {
+    max-width: none;
+  }
+
+  .prog-hero__lede {
+    max-width: none;
+  }
+
+  .pathway-card {
+    max-width: none;
   }
 
   .path-grid,
-  .compare-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
+  .compare-grid,
   .shared-foundation {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2718,33 +2757,23 @@ ol {
 }
 
 /* ---------- Tasks page responsive ---------- */
-@media (max-width: 900px) {
-  .tasks-hero__grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2.25rem;
-  }
 
+/* Small desktop and tablet: tighter spacing, wider text blocks */
+@media (max-width: 980px) {
   .tasks-hero__copy h1 {
-    max-width: 20ch;
+    font-size: clamp(2.3rem, 4.6vw, 3.2rem);
   }
 
-  .route-card {
-    max-width: 620px;
+  .tasks-hero__lede {
+    font-size: 0.98rem;
   }
 
-  .journey-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2rem;
-  }
-
-  .journey-intro {
-    position: static;
+  .level-legend {
+    padding: 1.1rem 1.15rem;
   }
 
   .level-legend ul {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.55rem 0.75rem;
+    gap: 0.5rem 0.75rem;
   }
 
   .level-legend .level {
@@ -2759,6 +2788,95 @@ ol {
 
   .footer-brand {
     grid-column: 1 / -1;
+  }
+}
+
+/* Tablet: keep two columns so the page fills the width */
+@media (min-width: 769px) and (max-width: 980px) {
+  .tasks-hero__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.94fr);
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .tasks-hero__copy h1 {
+    max-width: 13ch;
+  }
+
+  .tasks-hero__lede {
+    max-width: none;
+  }
+
+  .tasks-hero__meta {
+    gap: 1rem;
+  }
+
+  .route-card {
+    max-width: none;
+  }
+
+  .journey-grid {
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .journey-intro > p {
+    max-width: none;
+  }
+
+  .journey-note {
+    max-width: none;
+  }
+
+  .level-legend ul {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Phone and small tablet: one column with full width content */
+@media (max-width: 768px) {
+  .tasks-hero__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.85rem;
+  }
+
+  .tasks-hero__copy h1 {
+    max-width: none;
+  }
+
+  .tasks-hero__lede {
+    max-width: none;
+  }
+
+  .tasks-hero__meta {
+    gap: 0.85rem 1.25rem;
+  }
+
+  .route-card {
+    max-width: none;
+  }
+
+  .journey-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.85rem;
+  }
+
+  .journey-intro {
+    position: static;
+  }
+
+  .journey-intro > p {
+    max-width: none;
+  }
+
+  .journey-note {
+    max-width: none;
+  }
+
+  .level-legend ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem 0.75rem;
   }
 }
 
@@ -2867,6 +2985,49 @@ ol {
 
   .internship-actions .band-link {
     align-self: flex-start;
+  }
+}
+
+/* ---------- Tablet refinements (shared) ---------- */
+@media (min-width: 481px) and (max-width: 980px) {
+  /* Key figures spread evenly across the full width of the column */
+  .tasks-hero__meta,
+  .prog-hero__meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 980px) {
+  /* Call to action band: copy fills the top row, buttons fill the bottom row */
+  .cta-band {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 1.25rem 1.5rem;
+  }
+
+  .cta-copy {
+    grid-column: 2;
+  }
+
+  .cta-actions {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: none;
+    gap: 0.75rem;
+  }
+
+  .cta-actions .btn {
+    flex: 1 1 240px;
+  }
+
+  /* Homepage text blocks use the width of the column */
+  .about-intro p,
+  .why-intro p {
+    max-width: 68ch;
   }
 }
 

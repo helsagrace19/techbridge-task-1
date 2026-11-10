@@ -57,8 +57,8 @@ The Programs page is available at `/programs.html` and the Internship Tasks page
 ## Responsive behaviour
 
 - **Desktop (≥ 981px):** two-column hero and program cards; full horizontal navigation; a two-column Tasks journey with a sticky introduction beside the task timeline.
-- **Tablet (641–980px):** stacked program cards and comparison panels; the Tasks hero and journey collapse to one column; a two-column footer; the mobile navigation is used.
-- **Mobile (≤ 640px):** single-column content, full-width buttons, two-column "Why TechBridge" feature grid, a single-column difficulty legend, a compact task timeline, and a full-height off-canvas menu that slides in from the right over a blurred backdrop.
+- **Tablet (641–980px):** two-column hero and journey layouts that fill the width, key figures spread across three columns, program cards and comparison panels side by side, call to action buttons in a full-width row, a two-column footer, and the mobile navigation.
+- **Mobile (≤ 640px):** single-column content that uses the full width, full-width buttons, two-column "Why TechBridge" feature grid, a single-column difficulty legend, a compact task timeline, and a full-height off-canvas menu that slides in from the right over a blurred backdrop.
 
 ## Accessibility
 
