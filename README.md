@@ -1,4 +1,4 @@
-# TechBridge — Website (Tasks 1 & 2)
+# TechBridge Website (Tasks 1, 2 & 3)
 
 A responsive website for **TechBridge by Baselink Services Limited**, a learning and career development initiative bridging learning to real-world experience.
 
@@ -10,6 +10,7 @@ Built with **HTML5 + CSS3** (no frameworks), plus a small vanilla JavaScript fil
 | --- | --- |
 | `index.html` | Homepage: introduction, About, program preview, 30-Day Practical Internship, Why TechBridge, apply/community call to action, footer. |
 | `programs.html` | Dedicated Programs experience: overview, Data Analytics and Web Development program cards, skills, differentiation guide, internship connection and application CTA. |
+| `tasks.html` | Internship Tasks experience: an introduction to the 30-day internship, an at-a-glance Day 1 to Day 26 route card, and a difficulty-graded timeline of all eight practical tasks. |
 
 ## What the site communicates
 
@@ -20,6 +21,8 @@ Built with **HTML5 + CSS3** (no frameworks), plus a small vanilla JavaScript fil
   - **Web Development:** HTML, CSS, JavaScript, Git/GitHub, building web projects
 - How the two programs differ: data and insights, versus websites and web applications
 - The **30-Day Practical Internship**, its project-based nature and the possibility of a **recommendation letter based on successful participation/performance**
+- The **eight internship tasks** in the 30-day program: each task number, title, description and the day it is introduced (Day 1, 4, 8, 11, 15, 19, 22 and 26)
+- How the tasks build progressively from beginner HTML and CSS to more advanced, interactive interfaces, using the difficulty levels Beginner, Beginner to Intermediate, Intermediate and Intermediate to Advanced Beginner
 - How to apply (official application form) and join the community (official WhatsApp group)
 - Official contact details: techbridgebaslink@gmail.com, LinkedIn and Facebook
 
@@ -29,13 +32,15 @@ Built with **HTML5 + CSS3** (no frameworks), plus a small vanilla JavaScript fil
 techbridge-task-1/
 ├── index.html                     # Homepage (Task 1)
 ├── programs.html                  # Programs experience (Task 2)
-├── style.css                      # Shared design tokens, components, both pages
+├── tasks.html                     # Internship Tasks experience (Task 3)
+├── style.css                      # Shared design tokens, components, all pages
 ├── script.js                      # Mobile off-canvas navigation only
 ├── images/
 │   ├── techbridge-logo.png        # Official TechBridge logo
 │   └── internship-illustration.png
 ├── homepage-screenshot.png        # Desktop screenshot of the homepage
 ├── programs-screenshot.png        # Desktop screenshot of the Programs experience
+├── tasks-screenshot.png           # Desktop screenshot of the Internship Tasks experience
 └── README.md
 ```
 
@@ -47,23 +52,27 @@ Open `index.html` in any modern browser. No build step or dependencies are requi
 
 Deployed via Vercel: https://techbridge-task-1-plum.vercel.app
 
-The Programs page is available at `/programs.html` on the same deployment.
+The Programs page is available at `/programs.html` and the Internship Tasks page at `/tasks.html` on the same deployment.
 
 ## Responsive behaviour
 
-- **Desktop (≥ 981px):** two-column hero and program cards; full horizontal navigation.
-- **Tablet (641–980px):** stacked program cards and comparison panels; the mobile navigation is used.
-- **Mobile (≤ 640px):** single-column content, full-width buttons, two-column "Why TechBridge" feature grid, and a full-height off-canvas menu that slides in from the right over a blurred backdrop.
+- **Desktop (≥ 981px):** two-column hero and program cards; full horizontal navigation; a two-column Tasks journey with a sticky introduction beside the task timeline.
+- **Tablet (641–980px):** stacked program cards and comparison panels; the Tasks hero and journey collapse to one column; a two-column footer; the mobile navigation is used.
+- **Mobile (≤ 640px):** single-column content, full-width buttons, two-column "Why TechBridge" feature grid, a single-column difficulty legend, a compact task timeline, and a full-height off-canvas menu that slides in from the right over a blurred backdrop.
 
 ## Accessibility
 
 - Semantic landmarks and a single `h1` per page
-- Visible keyboard focus states, including a focus outline on linked program cards
+- Visible keyboard focus states, including a focus outline on linked program cards and route links
 - "Skip to main content" link
 - Mobile menu updates `aria-expanded`, closes with Escape and restores focus to the toggle
 - The blurred menu backdrop is hidden from assistive technology; the menu can also be dismissed by tapping it
 - Respect for `prefers-reduced-motion`
 - Descriptive `aria-label`s on icon-only links
+
+## Developer note, Task 3
+
+> I built the Internship Tasks experience as a roadmap that extends the bridge motif from the homepage and the pathway visual from the Programs page. A route card gives visitors the full Day 1 to Day 26 schedule at a glance, while a vertical timeline presents all eight tasks with their number, title, description, difficulty level and the day each one is introduced. I used a four-step difficulty scale with filled dots to show progression, and kept all task content in the HTML so the page works fully without JavaScript. The main challenge was making a long timeline feel calm and readable on small screens, which I solved by shrinking the day markers and moving to a single-column layout with compact cards. I learned how to communicate sequence and progression with layout, typography and small visual cues rather than extra interactivity.
 
 ## Developer note, Task 2
 
