@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Internship Roadmap — TechBridge</title>
+  <meta name="description" content="Explore the TechBridge 30-day internship in two tracks. Switch between Data Analytics and Web Development to see all eight tasks, their days, difficulty and what each one involves.">
+  <meta name="theme-color" content="#f4f2ee">
+  <link rel="icon" href="images/techbridge-logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <a class="brand__link" href="index.html" aria-label="TechBridge home">
+          <img src="images/techbridge-logo.png" alt="TechBridge" width="578" height="115">
+        </a>
+        <p class="brand__tagline">Bridging Learning to Real-World Experience</p>
+      </div>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+        <span class="nav-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="nav-toggle__text" aria-hidden="true">Menu</span>
+      </button>
+
+      <nav class="site-nav" id="primary-nav" aria-label="Primary">
+        <ul class="nav-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="programs.html">Programs</a></li>
+          <li><a href="index.html#internship">Internship</a></li>
+          <li><a href="tasks.html">Tasks</a></li>
+          <li><a href="roadmap.html" class="is-active" aria-current="page">Roadmap</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+        <a class="btn btn--primary btn--sm nav-cta" href="https://forms.gle/8EbdSy5ttGfLZfjv5" target="_blank" rel="noopener noreferrer">
+          Apply Now
+          <span class="btn__arrow" aria-hidden="true">→</span>
+          <span class="sr-only">(opens the official application form in a new tab)</span>
+        </a>
+      </nav>
+
+      <a class="btn btn--primary btn--sm header-cta" href="https://forms.gle/8EbdSy5ttGfLZfjv5" target="_blank" rel="noopener noreferrer">
+        Apply Now
+        <span class="btn__arrow" aria-hidden="true">→</span>
+        <span class="sr-only">(opens the official application form in a new tab)</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="nav-backdrop" aria-hidden="true"></div>
+
+  <main id="main">
+    <!-- Roadmap hero -->
+    <section class="roadmap-hero" aria-labelledby="roadmap-title">
+      <div class="container roadmap-hero__grid">
+        <div class="roadmap-hero__copy">
+          <p class="pill">30-Day Practical Internship</p>
+          <h1 id="roadmap-title">Two tracks. Eight tasks. One <em>30-day journey.</em></h1>
+          <p class="roadmap-hero__lede">TechBridge offers practical internship opportunities in two tracks: Data Analytics and Web Development. Choose a track to see all eight tasks, the day each one is introduced, what it involves and how the difficulty builds.</p>
+
+          <div class="roadmap-hero__actions">
+            <a class="btn btn--primary" href="#roadmap">
+              Choose your track
+              <span class="btn__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="btn btn--ghost" href="tasks.html">
+              See the full task journey
+              <span class="btn__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <ul class="roadmap-hero__meta">
+            <li>
+              <strong>2</strong>
+              <span>Internship tracks</span>
+            </li>
+            <li>
+              <strong>16</strong>
+              <span>Tasks in total</span>
+            </li>
+            <li>
+              <strong>30</strong>
+              <span>Day internship</span>
+            </li>
+          </ul>
+        </div>
+
+        <aside class="structure-card" aria-labelledby="structure-title">
+          <div class="structure-card__head">
+            <p class="structure-card__label" id="structure-title">The 30-day structure</p>
+            <span class="structure-card__range">Day 1 → 26</span>
+          </div>
+
+          <ol class="day-grid">
+            <li class="day-cell"><span class="day-cell__label">Day 1</span><span class="day-cell__task">Task 01</span></li>
+            <li class="day-cell"><span class="day-cell__label">Day 4</span><span class="day-cell__task">Task 02</span></li>
+            <li class="day-cell"><span class="day-cell__label">Day 8</span><span class="day-cell__task">Task 03</span></li>
+            <li class="day-cell"><span class="day-cell__label">Day 11</span><span class="day-cell__task">Task 04</span></li>
+            <li class="day-cell"><span class="day-cell__label">Day 15</span><span class="day-cell__task">Task 05</span></li>
+            <li class="day-cell"><span class="day-cell__label">Day 19</span><span class="day-cell__task">Task 06</span></li>
+            <li class="day-cell"><span class="day-cell__label">Day 22</span><span class="day-cell__task">Task 07</span></li>
+            <li class="day-cell"><span class="day-cell__label">Day 26</span><span class="day-cell__task">Task 08</span></li>
+          </ol>
+
+          <div class="structure-card__foot">
+            <p class="structure-card__note">Both tracks follow the same 8-task schedule across the 30-day internship. Tasks are introduced on the days shown.</p>
+            <div class="structure-levels">
+              <span class="structure-levels__label">Difficulty</span>
+              <span class="level level--1">
+                <span class="level__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                Beginner
+              </span>
+              <span class="structure-levels__arrow" aria-hidden="true">→</span>
+              <span class="level level--3">
+                <span class="level__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                Intermediate
+              </span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Interactive two-track roadmap -->
+    <section class="section roadmap-section" id="roadmap" aria-labelledby="workspace-title">
+      <div class="container">
+        <div class="roadmap-head">
+          <div>
+            <p class="pill">The Roadmap</p>
+            <h2 id="workspace-title">Choose a track. See the whole journey.</h2>
+          </div>
+          <p class="roadmap-head__intro">Select Data Analytics or Web Development to view all eight tasks. The roadmap updates instantly, with no page refresh.</p>
+        </div>
+
+        <div class="track-shell">
+          <div class="track-switcher" role="tablist" aria-label="Choose an internship track">
+            <button class="track-tab is-active" id="tab-data-analytics" type="button" role="tab" aria-selected="true" aria-controls="track-panel" tabindex="0" data-track="data-analytics">
+              <span class="track-tab__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M4 20V9M10 20V4M16 20v-7M22 20H2"/>
+                </svg>
+              </span>
+              <span class="track-tab__copy">
+                <span class="track-tab__name">Data Analytics</span>
+                <span class="track-tab__meta">Spreadsheets, SQL and insights</span>
+              </span>
+              <span class="track-tab__mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="m5 12.5 4.5 4.5L19 6.5"/>
+                </svg>
+              </span>
+            </button>
+
+            <button class="track-tab" id="tab-web-development" type="button" role="tab" aria-selected="false" aria-controls="track-panel" tabindex="-1" data-track="web-development">
+              <span class="track-tab__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="m8 8-4.5 4L8 16M16 8l4.5 4L16 16M13.5 4l-3 16"/>
+                </svg>
+              </span>
+              <span class="track-tab__copy">
+                <span class="track-tab__name">Web Development</span>
+                <span class="track-tab__meta">HTML, CSS and JavaScript</span>
+              </span>
+              <span class="track-tab__mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="m5 12.5 4.5 4.5L19 6.5"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <div class="track-bar">
+            <p class="currently-viewing">
+              <span class="currently-viewing__label">Currently viewing</span>
+              <strong id="current-track-name">Data Analytics</strong>
+            </p>
+            <p class="track-summary" id="track-summary">8 tasks · Day 1 → 26 · Beginner → Intermediate</p>
+          </div>
+
+          <p class="sr-only" id="track-announcement" role="status" aria-live="polite"></p>
+
+          <div class="track-panel" id="track-panel" role="tabpanel" aria-labelledby="tab-data-analytics">
+            <div class="track-overview">
+              <div class="progress-card">
+                <div class="progress-card__head">
+                  <p class="progress-card__label">Your progress</p>
+                  <p class="progress-card__count"><strong id="progress-count">0</strong><span> / 8 complete</span></p>
+                </div>
+                <div class="progress-card__bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" aria-label="Tasks completed in this track">
+                  <span class="progress-card__fill" id="progress-fill"></span>
+                </div>
+                <div class="progress-card__foot">
+                  <p class="progress-card__message" id="progress-message">No tasks marked yet. Progress is saved in this browser only.</p>
+                  <button class="progress-reset" id="progress-reset" type="button" disabled>Reset</button>
+                </div>
+              </div>
+
+              <div class="difficulty-card">
+                <p class="difficulty-card__label" id="difficulty-title">Difficulty progression</p>
+                <ol class="difficulty-arc" id="difficulty-arc" aria-labelledby="difficulty-title"></ol>
+                <p class="difficulty-card__note">Eight tasks, building from beginner-friendly work to intermediate projects.</p>
+              </div>
+            </div>
+
+            <ol class="roadmap-list" id="task-list" aria-label="Internship tasks for the selected track"></ol>
+
+            <p class="roadmap-note">
+              <span class="roadmap-note__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 11v5.5M12 7.6h.01"/>
+                </svg>
+              </span>
+              Task information follows the official TechBridge internship schedule. Progress buttons are a personal planning aid and are not an official completion record.
+            </p>
+          </div>
+        </div>
+
+        <noscript>
+          <p class="roadmap-noscript">The interactive roadmap needs JavaScript to switch between the Data Analytics and Web Development tracks. You can still read every Web Development task on the <a href="tasks.html">Internship Tasks page</a>.</p>
+        </noscript>
+      </div>
+    </section>
+
+    <!-- Apply / Tasks -->
+    <section class="section cta-section" id="apply" aria-labelledby="cta-title">
+      <div class="container">
+        <div class="cta-band">
+          <span class="cta-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="m22 2-7 20-4-9-9-4 20-7Z"/>
+              <path d="M22 2 11 13"/>
+            </svg>
+          </span>
+
+          <div class="cta-copy">
+            <h2 id="cta-title">Ready to choose your track?</h2>
+            <p>Apply for the TechBridge internship, or revisit the eight-task journey and the programs that lead into it.</p>
+          </div>
+
+          <div class="cta-actions">
+            <a class="btn btn--cream" href="https://forms.gle/8EbdSy5ttGfLZfjv5" target="_blank" rel="noopener noreferrer">
+              TechBridge Internship Application Form
+              <span class="btn__arrow" aria-hidden="true">→</span>
+              <span class="sr-only">(opens in a new tab)</span>
+            </a>
+            <a class="btn btn--outline-light" href="tasks.html">
+              Explore the 8 tasks
+              <span class="btn__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="footer-logo" href="index.html" aria-label="TechBridge home">
+            <img src="images/techbridge-logo.png" alt="TechBridge" width="578" height="115">
+          </a>
+          <p class="footer-org">TechBridge by Baselink Services Limited</p>
+          <p class="footer-tagline">Bridging Learning to Real-World Experience</p>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer">
+          <h2 class="footer-heading">Quick Links</h2>
+          <div class="footer-links">
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="index.html#about">About</a></li>
+              <li><a href="programs.html">Programs</a></li>
+            </ul>
+            <ul>
+              <li><a href="tasks.html">Tasks</a></li>
+              <li><a href="roadmap.html">Roadmap</a></li>
+              <li><a href="index.html#internship">Internship</a></li>
+              <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="footer-contact">
+          <h2 class="footer-heading">Contact</h2>
+          <ul>
+            <li>
+              <a href="mailto:techbridgebaslink@gmail.com">
+                <svg class="contact-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                  <rect x="2.5" y="5" width="19" height="14" rx="2.5" stroke="currentColor" stroke-width="1.7"/>
+                  <path d="m3.5 6.5 8.5 6.5 8.5-6.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                techbridgebaslink@gmail.com
+              </a>
+            </li>
+          </ul>
+          <div class="social-row">
+            <a class="social-btn" href="https://www.linkedin.com/company/techbridge-services/" target="_blank" rel="noopener noreferrer" aria-label="TechBridge on LinkedIn (opens in a new tab)">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M4.98 3.5a2.5 2.5 0 1 1-.02 5 2.5 2.5 0 0 1 .02-5ZM3 9.2h4V21H3V9.2Zm6.6 0h3.8v1.6h.1c.53-1 1.83-2.06 3.75-2.06 4.01 0 4.75 2.64 4.75 6.07V21h-4v-5.35c0-1.28-.02-2.92-1.78-2.92-1.78 0-2.06 1.39-2.06 2.83V21h-4V9.2h-.56Z"/>
+              </svg>
+            </a>
+            <a class="social-btn" href="https://www.instagram.com/techbridgeserves" target="_blank" rel="noopener noreferrer" aria-label="TechBridge on Instagram (opens in a new tab)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false">
+                <rect x="3" y="3" width="18" height="18" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+            <a class="social-btn" href="https://www.facebook.com/p/Baselink-Services-100066771475783/" target="_blank" rel="noopener noreferrer" aria-label="TechBridge on Facebook (opens in a new tab)">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M13.5 21.5v-6.9h2.32l.44-2.86H13.5V9.87c0-.83.23-1.39 1.42-1.39h1.44V5.94c-.25-.03-1.1-.1-2.1-.1-2.08 0-3.5 1.27-3.5 3.6v2.3H8.4v2.86h2.36v6.9h2.74Z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 TechBridge by Baselink Services Limited. All rights reserved.</p>
+        <p class="footer-motto">Learn. Build. Grow.</p>
+      </div>
+    </div>
+  </footer>
+
+  <template id="task-template">
+    <li class="roadmap-task">
+      <article class="roadmap-card">
+        <div class="roadmap-card__top">
+          <span class="roadmap-card__number" data-field="number"></span>
+          <span class="level" data-field="level">
+            <span class="level__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span data-field="difficulty"></span>
+          </span>
+        </div>
+        <h3 data-field="title"></h3>
+        <p class="roadmap-card__description" data-field="description"></p>
+        <div class="roadmap-card__foot">
+          <p class="roadmap-card__day"><span>Day</span> <strong data-field="day"></strong></p>
+          <button class="task-check" type="button" aria-pressed="false" data-check>
+            <span class="task-check__box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="m5 12.5 4.5 4.5L19 6.5"/>
+              </svg>
+            </span>
+            <span class="task-check__text" data-check-text>Mark complete</span>
+          </button>
+        </div>
+      </article>
+    </li>
+  </template>
+</body>
+</html>
