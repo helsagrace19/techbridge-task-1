@@ -634,3 +634,671 @@
 
   selectTrack(readInitialTrack(), { announce: false });
 })();
+
+/* ============================================================
+   Challenge Hub (Task 5)
+   Eight practice challenges, filtered by track, difficulty and
+   search, with an accessible detail dialog.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var grid = document.getElementById("challenge-grid");
+  var template = document.getElementById("challenge-template");
+
+  if (!grid || !template) {
+    return;
+  }
+
+  var searchInput = document.getElementById("challenge-search");
+  var countValue = document.getElementById("challenge-count-value");
+  var countLabel = document.getElementById("challenge-count-label");
+  var resetButton = document.getElementById("challenge-reset");
+  var emptyState = document.getElementById("challenge-empty");
+  var emptyReset = document.getElementById("challenge-empty-reset");
+  var trackButtons = Array.prototype.slice.call(document.querySelectorAll("[data-filter-track]"));
+  var levelButtons = Array.prototype.slice.call(document.querySelectorAll("[data-filter-level]"));
+
+  var dialog = document.getElementById("challenge-dialog");
+  var dialogClose = document.getElementById("dialog-close");
+  var copyButton = document.getElementById("dialog-copy");
+  var copyText = document.getElementById("dialog-copy-text");
+
+  var DEFAULT_FILTERS = { track: "all", level: "all", query: "" };
+  var TOTAL = 8;
+
+  /* Original practice challenges, not official internship tasks. */
+  var challenges = [
+    {
+      id: "clean-the-messy-sales-export",
+      title: "Clean the Messy Sales Export",
+      track: "data-analytics",
+      trackName: "Data Analytics",
+      difficulty: "Beginner",
+      level: 1,
+      time: "2 to 3 hours",
+      description: "A small shop has exported six months of sales into one spreadsheet, and the file arrived with duplicate rows, blank cells and three different date formats. Make it usable.",
+      outcome: "A clean, well-labelled dataset you can analyse without second-guessing the numbers.",
+      brief: "The shop owner wants to know which products actually sell. Before any analysis can start, the export has to be trustworthy. Work through the file row by row, decide what counts as a duplicate, and document every change you make so the owner can follow your reasoning.",
+      skills: ["Data cleaning", "Data validation", "Spreadsheet functions", "Documentation"],
+      tools: ["Google Sheets", "Microsoft Excel"],
+      steps: [
+        "Download or recreate a 200 to 500 row sales export with product, date, quantity, unit price and region columns.",
+        "Remove exact duplicate rows and flag any near-duplicates for review instead of deleting them silently.",
+        "Fill or flag blank cells, then standardise dates, currency and product names.",
+        "Add a short change log sheet listing each issue found and how you resolved it.",
+        "Finish with a summary row that totals quantity and revenue for the cleaned data."
+      ],
+      deliverable: "The cleaned spreadsheet plus a one-page change log. Share a view-only link or export both sheets as a PDF.",
+      done: [
+        "No duplicate rows remain and every remaining row has a complete date and product name.",
+        "Dates follow one format and currency values are stored as numbers, not text.",
+        "The change log explains every deletion, fill or correction."
+      ]
+    },
+    {
+      id: "answer-five-questions-with-pivot-tables",
+      title: "Answer Five Questions with Pivot Tables",
+      track: "data-analytics",
+      trackName: "Data Analytics",
+      difficulty: "Intermediate",
+      level: 2,
+      time: "3 to 4 hours",
+      description: "A café has a year of order data and five plain questions from the owner. Build one Pivot Table per question and turn the numbers into short, clear answers.",
+      outcome: "A one-page answer sheet backed by five Pivot Tables the owner can refresh.",
+      brief: "The café owner does not want a dashboard yet. They want five specific questions answered before the next menu review: which drinks earn the most, which days are busiest, which sizes sell best, how weekend trade compares with weekdays, and how average order value changes by month. Use Pivot Tables rather than manual counting.",
+      skills: ["Pivot Tables", "Grouping and sorting", "Calculated fields", "Business interpretation"],
+      tools: ["Google Sheets", "Microsoft Excel"],
+      steps: [
+        "Create or download a sample order table with date, day, item, size, quantity and price.",
+        "Build one Pivot Table per question, each on its own labelled block of the sheet.",
+        "Group dates by month and sort so the busiest days and top items appear first.",
+        "Add a calculated revenue field and check the totals against the raw data.",
+        "Write a one-sentence answer under each table, in plain language, with the number that supports it."
+      ],
+      deliverable: "One answer sheet with five labelled Pivot Tables and five short written answers.",
+      done: [
+        "Each question has a Pivot Table that can be refreshed when new orders are added.",
+        "Revenue totals match the source data.",
+        "The written answers name the finding and the figure behind it."
+      ]
+    },
+    {
+      id: "build-a-three-chart-insight-story",
+      title: "Build a Three-Chart Insight Story",
+      track: "data-analytics",
+      trackName: "Data Analytics",
+      difficulty: "Intermediate",
+      level: 2,
+      time: "3 to 4 hours",
+      description: "Take a small public dataset and explain one clear finding with three charts that build on each other: the context, the pattern and the reason behind it.",
+      outcome: "A three-chart story with a headline, short captions and one recommendation.",
+      brief: "Charts are only useful when they answer something. Pick a small public dataset you find interesting, choose one question, and design three charts that take a reader from the big picture to the specific insight. Every chart needs a title that states its point, and every axis needs a label.",
+      skills: ["Chart selection", "Data storytelling", "Labelling and scale", "Written recommendation"],
+      tools: ["Google Sheets", "Microsoft Excel", "Datawrapper (optional)"],
+      steps: [
+        "Choose a dataset of at least 50 rows and write your question as a single sentence.",
+        "Create chart one for context: the overall size, range or trend.",
+        "Create chart two for the pattern: the comparison or change that matters most.",
+        "Create chart three for the cause or breakdown: the segment that explains the pattern.",
+        "Add a headline, one caption per chart and a two-sentence recommendation."
+      ],
+      deliverable: "A single page or slide containing the three charts, captions and recommendation, exported as a PDF.",
+      done: [
+        "Each chart has a title that states a finding rather than naming the axis.",
+        "Axes, units and sources are labelled.",
+        "The recommendation follows logically from the third chart."
+      ]
+    },
+    {
+      id: "turn-a-raw-export-into-a-one-page-analysis",
+      title: "Turn a Raw Export into a One-Page Analysis",
+      track: "data-analytics",
+      trackName: "Data Analytics",
+      difficulty: "Advanced",
+      level: 3,
+      time: "5 to 6 hours",
+      description: "An end-to-end brief: clean two raw tables, answer a business question, visualise the result and defend your recommendation on one page.",
+      outcome: "A portfolio-ready one-page analysis with clean data, working queries, a chart and a recommendation.",
+      brief: "A fictional online store wants to know why repeat purchases dropped last quarter. You have two raw tables, customers and orders, and one page to answer. Treat it like a real handover: state your assumptions, show your working and make a recommendation the store could act on next week.",
+      skills: ["Data cleaning", "SQL joins", "Aggregation", "Visualisation", "Written analysis"],
+      tools: ["SQLite or DB Browser", "Google Sheets", "Microsoft Excel"],
+      steps: [
+        "Load the customers and orders tables and check row counts, missing values and duplicate IDs.",
+        "Write queries that measure repeat purchase rate by month and by acquisition channel.",
+        "Identify the segment driving the change and test at least one alternative explanation.",
+        "Chart the trend and annotate the point where it changes.",
+        "Write the one-page summary: question, method, finding, limitation and recommendation."
+      ],
+      deliverable: "A one-page PDF or document plus your SQL file or spreadsheet with the queries and cleaned tables.",
+      done: [
+        "The repeat purchase rate is calculated from the raw data and reconciles with your totals.",
+        "Your finding is supported by a chart and at least one query result.",
+        "You name one limitation and one specific next step."
+      ]
+    },
+    {
+      id: "build-a-personal-profile-card",
+      title: "Build a Personal Profile Card",
+      track: "web-development",
+      trackName: "Web Development",
+      difficulty: "Beginner",
+      level: 1,
+      time: "2 to 3 hours",
+      description: "Create a single profile card with a photo, name, role, short bio and three links, then make it look right from 320px to a wide desktop.",
+      outcome: "A responsive profile card you can reuse on a portfolio or team page.",
+      brief: "Profile cards appear everywhere: team pages, portfolios, author boxes. Build one from scratch with semantic HTML and plain CSS, using a placeholder photo and your own details or a fictional persona. Focus on spacing, readable type and a layout that never breaks.",
+      skills: ["Semantic HTML", "CSS box model", "Flexbox", "Responsive design"],
+      tools: ["HTML", "CSS", "VS Code", "Browser developer tools"],
+      steps: [
+        "Write the card in semantic HTML: an article with an image, heading, role, short paragraph and a list of links.",
+        "Style the card with a border, radius, padding and a clear type hierarchy.",
+        "Lay out the image and text with Flexbox, then let the card stack on narrow screens.",
+        "Add hover and focus styles for the links and check the colour contrast.",
+        "Test at 320px, 768px and 1440px and fix any overflow."
+      ],
+      deliverable: "One HTML file and one CSS file, plus screenshots at 320px and 1440px.",
+      done: [
+        "The card has one main heading, real alt text and no horizontal scrolling at 320px.",
+        "Links show a visible keyboard focus state.",
+        "Text stays readable without zooming."
+      ]
+    },
+    {
+      id: "create-a-responsive-pricing-section",
+      title: "Create a Responsive Pricing Section",
+      track: "web-development",
+      trackName: "Web Development",
+      difficulty: "Intermediate",
+      level: 2,
+      time: "3 to 4 hours",
+      description: "Design a three-tier pricing section that compares plans clearly, stacks on mobile without losing the recommended option, and survives a long plan name.",
+      outcome: "A pricing section with three plans, a highlighted recommendation and a clean mobile stack.",
+      brief: "Pricing sections are a good test of layout discipline: three similar blocks, one clear recommendation and no fragile widths. Build the section for a fictional product, then stress-test it with longer copy, a missing feature and a narrow screen.",
+      skills: ["CSS Grid", "Responsive breakpoints", "Visual hierarchy", "Component states"],
+      tools: ["HTML", "CSS", "Browser developer tools"],
+      steps: [
+        "Write the markup for three plan cards with name, price, billing note, feature list and a call to action.",
+        "Use CSS Grid to place the plans side by side and highlight the recommended plan with contrast, not colour alone.",
+        "Add hover and focus states to each call to action.",
+        "Add a long plan name and an extra feature to test the layout, then fix any wrapping issues.",
+        "Stack the plans on mobile and keep the recommended plan first in the reading order."
+      ],
+      deliverable: "The pricing section as an HTML and CSS pair, with a short note on the breakpoints you used.",
+      done: [
+        "All three plans align at desktop and stack in a sensible order on mobile.",
+        "The recommended plan is identified by a label as well as colour.",
+        "Buttons remain at least 44px tall and keyboard focus is visible."
+      ]
+    },
+    {
+      id: "build-a-filterable-resource-library",
+      title: "Build a Filterable Resource Library",
+      track: "web-development",
+      trackName: "Web Development",
+      difficulty: "Intermediate",
+      level: 2,
+      time: "4 to 5 hours",
+      description: "Create a small library of study resources with category filters, a search box and a friendly empty state, all updating without a page reload.",
+      outcome: "A working filter and search interface with a result count, clear filters and a no-results state.",
+      brief: "Filtering looks simple until the data is uneven. Build a library of at least eight resources across three categories, then add category buttons, a search field and a reset control. Test it with a search that matches nothing and make sure the page still makes sense.",
+      skills: ["DOM manipulation", "Array methods", "Event handling", "Empty states", "Accessible controls"],
+      tools: ["HTML", "CSS", "JavaScript", "Browser developer tools"],
+      steps: [
+        "Store the resources in an array of objects with a title, category, description and link.",
+        "Render the cards from the array with a reusable function.",
+        "Add category buttons that update the active state and filter the list.",
+        "Add a search field that matches the title and description, ignoring case.",
+        "Show a live result count and an empty state with a clear filters button."
+      ],
+      deliverable: "The library page plus a short list of the edge cases you tested.",
+      done: [
+        "Filters and search can be combined and the result count is always accurate.",
+        "The active filter is announced with aria-pressed or an equivalent state.",
+        "The empty state appears only when nothing matches and clears every filter."
+      ]
+    },
+    {
+      id: "add-accessible-form-validation",
+      title: "Add Accessible Form Validation",
+      track: "web-development",
+      trackName: "Web Development",
+      difficulty: "Advanced",
+      level: 3,
+      time: "5 to 6 hours",
+      description: "Build a signup form with inline validation that works by keyboard and screen reader, keeps entered values on error and never relies on colour alone.",
+      outcome: "An accessible form with inline errors, a success state and a documented keyboard test.",
+      brief: "Most forms fail at the first mistake: an error appears in red, the page jumps and nobody knows which field is wrong. Build a signup form that explains each problem in text, links the message to its field, moves focus sensibly and keeps everything the person already typed.",
+      skills: ["Form semantics", "Client-side validation", "ARIA live regions", "Focus management", "Error messaging"],
+      tools: ["HTML", "CSS", "JavaScript", "Screen reader or accessibility inspector"],
+      steps: [
+        "Mark up the form with labels, appropriate input types, autocomplete hints and a fieldset where grouping helps.",
+        "Validate on submit and on blur, with messages written as instructions rather than blame.",
+        "Link each message with aria-describedby and set aria-invalid on the field.",
+        "Move focus to the first invalid field on submit and keep every value the person entered.",
+        "Test the full flow with the keyboard only and with a screen reader, then document the results."
+      ],
+      deliverable: "The form page plus a short accessibility test note covering keyboard order, errors and the success state.",
+      done: [
+        "Every error is announced in text, not just shown in red.",
+        "The form can be completed with the keyboard alone.",
+        "Submitting valid details shows a clear success message without a reload."
+      ]
+    }
+  ];
+
+  var state = { track: "all", level: "all", query: "" };
+  var lastTrigger = null;
+  var copyTimer = null;
+
+  function findChallenge(id) {
+    for (var i = 0; i < challenges.length; i += 1) {
+      if (challenges[i].id === id) {
+        return challenges[i];
+      }
+    }
+    return null;
+  }
+
+  function normaliseLevel(value) {
+    var level = String(value || "").toLowerCase();
+    return level === "beginner" || level === "intermediate" || level === "advanced"
+      ? level
+      : "all";
+  }
+
+  function normaliseTrack(value) {
+    return value === "data-analytics" || value === "web-development" ? value : "all";
+  }
+
+  function matchesFilters(challenge) {
+    if (state.track !== "all" && challenge.track !== state.track) {
+      return false;
+    }
+
+    if (state.level !== "all" && challenge.difficulty.toLowerCase() !== state.level) {
+      return false;
+    }
+
+    var query = state.query.trim().toLowerCase();
+
+    if (!query) {
+      return true;
+    }
+
+    var haystack = [
+      challenge.title,
+      challenge.description,
+      challenge.outcome,
+      challenge.trackName,
+      challenge.difficulty
+    ]
+      .concat(challenge.skills, challenge.tools)
+      .join(" ")
+      .toLowerCase();
+
+    return query.split(/\s+/).every(function (term) {
+      return haystack.indexOf(term) !== -1;
+    });
+  }
+
+  function fillList(element, values) {
+    element.textContent = "";
+
+    values.forEach(function (value) {
+      var item = document.createElement("li");
+      item.textContent = value;
+      element.appendChild(item);
+    });
+  }
+
+  function buildCard(challenge) {
+    var card = template.content.firstElementChild.cloneNode(true);
+
+    card.classList.add("challenge-card--" + challenge.track);
+    card.setAttribute("data-challenge", challenge.id);
+
+    var track = card.querySelector('[data-field="track"]');
+    track.textContent = challenge.trackName;
+    track.classList.add("challenge-track--" + challenge.track);
+
+    var level = card.querySelector('[data-field="level"]');
+    level.classList.add("level--" + challenge.level);
+
+    card.querySelector('[data-field="difficulty"]').textContent = challenge.difficulty;
+    card.querySelector('[data-field="title"]').textContent = challenge.title;
+    card.querySelector('[data-field="description"]').textContent = challenge.description;
+    card.querySelector('[data-field="outcome"]').textContent = challenge.outcome;
+    card.querySelector('[data-field="time"]').textContent = challenge.time;
+    card.querySelector('[data-field="button-label"]').textContent = ": " + challenge.title;
+
+    var button = card.querySelector("[data-open]");
+    button.setAttribute("data-open", challenge.id);
+    button.setAttribute("aria-label", "View challenge: " + challenge.title);
+
+    return card;
+  }
+
+  function render() {
+    var visible = challenges.filter(matchesFilters);
+    var fragment = document.createDocumentFragment();
+
+    visible.forEach(function (challenge) {
+      fragment.appendChild(buildCard(challenge));
+    });
+
+    grid.textContent = "";
+    grid.appendChild(fragment);
+
+    grid.hidden = visible.length === 0;
+    emptyState.hidden = visible.length !== 0;
+
+    countValue.textContent = String(visible.length);
+    countLabel.textContent = "of " + TOTAL + " challenges";
+
+    trackButtons.forEach(function (button) {
+      var active = button.getAttribute("data-filter-track") === state.track;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+
+    levelButtons.forEach(function (button) {
+      var active = button.getAttribute("data-filter-level") === state.level;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+
+    var isDefault =
+      state.track === "all" && state.level === "all" && state.query.trim() === "";
+
+    resetButton.setAttribute("aria-disabled", isDefault ? "true" : "false");
+  }
+
+  function updateUrl() {
+    if (!window.history || !window.history.replaceState) {
+      return;
+    }
+
+    try {
+      var url = new URL(window.location.href);
+      var query = state.query.trim();
+
+      if (state.track === "all") {
+        url.searchParams.delete("track");
+      } else {
+        url.searchParams.set("track", state.track);
+      }
+
+      if (state.level === "all") {
+        url.searchParams.delete("level");
+      } else {
+        url.searchParams.set("level", state.level);
+      }
+
+      if (!query) {
+        url.searchParams.delete("q");
+      } else {
+        url.searchParams.set("q", query);
+      }
+
+      if (dialog && dialog.open && dialog.getAttribute("data-challenge-id")) {
+        url.searchParams.set("challenge", dialog.getAttribute("data-challenge-id"));
+      } else {
+        url.searchParams.delete("challenge");
+      }
+
+      window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+    } catch (error) {
+      /* Filters keep working when the URL cannot be updated. */
+    }
+  }
+
+  function readInitialState() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+
+      state.track = normaliseTrack(params.get("track"));
+      state.level = normaliseLevel(params.get("level"));
+      state.query = params.get("q") || "";
+
+      if (searchInput) {
+        searchInput.value = state.query;
+      }
+    } catch (error) {
+      state.track = "all";
+      state.level = "all";
+      state.query = "";
+    }
+  }
+
+  function setDialogContent(challenge) {
+    var track = document.getElementById("dialog-track");
+    var level = document.getElementById("dialog-level");
+
+    track.textContent = challenge.trackName;
+    track.className = "challenge-track challenge-track--" + challenge.track;
+
+    level.className = "level level--" + challenge.level;
+    document.getElementById("dialog-difficulty").textContent = challenge.difficulty;
+
+    document.getElementById("dialog-title").textContent = challenge.title;
+    document.getElementById("dialog-summary").textContent = challenge.description;
+    document.getElementById("dialog-track-name").textContent = challenge.trackName;
+    document.getElementById("dialog-level-name").textContent = challenge.difficulty;
+    document.getElementById("dialog-time").textContent = challenge.time;
+    document.getElementById("dialog-brief").textContent = challenge.brief;
+    document.getElementById("dialog-deliverable").textContent = challenge.deliverable;
+
+    fillList(document.getElementById("dialog-skills"), challenge.skills);
+    fillList(document.getElementById("dialog-tools"), challenge.tools);
+    fillList(document.getElementById("dialog-done"), challenge.done);
+
+    var steps = document.getElementById("dialog-steps");
+    steps.textContent = "";
+
+    challenge.steps.forEach(function (step) {
+      var item = document.createElement("li");
+      item.textContent = step;
+      steps.appendChild(item);
+    });
+  }
+
+  function openChallenge(id, trigger) {
+    var challenge = findChallenge(id);
+
+    if (!challenge || !dialog) {
+      return;
+    }
+
+    lastTrigger = trigger || document.activeElement;
+    setDialogContent(challenge);
+    dialog.setAttribute("data-challenge-id", challenge.id);
+
+    if (typeof dialog.showModal === "function") {
+      if (!dialog.open) {
+        dialog.showModal();
+      }
+    } else {
+      dialog.setAttribute("open", "");
+    }
+
+    document.body.classList.add("dialog-open");
+
+    if (dialogClose) {
+      dialogClose.focus();
+    }
+
+    if (copyText) {
+      copyText.textContent = "Copy link to this challenge";
+    }
+
+    if (copyButton) {
+      copyButton.classList.remove("is-copied");
+    }
+
+    updateUrl();
+  }
+
+  function closeChallenge() {
+    if (!dialog || !dialog.open) {
+      return;
+    }
+
+    dialog.close();
+  }
+
+  function resetFilters() {
+    state.track = "all";
+    state.level = "all";
+    state.query = "";
+
+    if (searchInput) {
+      searchInput.value = "";
+    }
+
+    render();
+    updateUrl();
+  }
+
+  function setTrackFilter(value) {
+    var next = normaliseTrack(value);
+
+    if (state.track === next) {
+      return;
+    }
+
+    state.track = next;
+    render();
+    updateUrl();
+  }
+
+  function setLevelFilter(value) {
+    var next = normaliseLevel(value);
+
+    if (state.level === next) {
+      return;
+    }
+
+    state.level = next;
+    render();
+    updateUrl();
+  }
+
+  trackButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      setTrackFilter(button.getAttribute("data-filter-track"));
+    });
+  });
+
+  levelButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      setLevelFilter(button.getAttribute("data-filter-level"));
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      state.query = searchInput.value;
+      render();
+      updateUrl();
+    });
+  }
+
+  resetButton.addEventListener("click", function () {
+    if (resetButton.getAttribute("aria-disabled") === "true") {
+      return;
+    }
+
+    resetFilters();
+    resetButton.focus();
+  });
+
+  if (emptyReset) {
+    emptyReset.addEventListener("click", function () {
+      resetFilters();
+    });
+  }
+
+  grid.addEventListener("click", function (event) {
+    var button = event.target.closest("[data-open]");
+
+    if (!button || !grid.contains(button)) {
+      return;
+    }
+
+    openChallenge(button.getAttribute("data-open"), button);
+  });
+
+  if (dialog) {
+    if (dialogClose) {
+      dialogClose.addEventListener("click", closeChallenge);
+    }
+
+    Array.prototype.forEach.call(dialog.querySelectorAll("[data-close]"), function (button) {
+      button.addEventListener("click", closeChallenge);
+    });
+
+    dialog.addEventListener("click", function (event) {
+      if (event.target === dialog) {
+        closeChallenge();
+      }
+    });
+
+    dialog.addEventListener("close", function () {
+      document.body.classList.remove("dialog-open");
+      updateUrl();
+
+      if (lastTrigger && document.contains(lastTrigger)) {
+        lastTrigger.focus();
+      }
+
+      lastTrigger = null;
+    });
+
+    if (copyButton) {
+      copyButton.addEventListener("click", function () {
+        var url = window.location.href;
+
+        function showCopied(message) {
+          if (copyText) {
+            copyText.textContent = message;
+          }
+          copyButton.classList.add("is-copied");
+
+          window.clearTimeout(copyTimer);
+          copyTimer = window.setTimeout(function () {
+            if (copyText) {
+              copyText.textContent = "Copy link to this challenge";
+            }
+            copyButton.classList.remove("is-copied");
+          }, 2600);
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () {
+            showCopied("Link copied");
+          }).catch(function () {
+            showCopied("Copy the address bar link");
+          });
+          return;
+        }
+
+        showCopied("Copy the address bar link");
+      });
+    }
+  }
+
+  readInitialState();
+  render();
+
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var requested = params.get("challenge");
+
+    if (requested) {
+      openChallenge(requested, null);
+    }
+  } catch (error) {
+    /* Deep links are a convenience; the library still works without them. */
+  }
+})();

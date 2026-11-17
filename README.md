@@ -1,8 +1,8 @@
-# TechBridge Website (Tasks 1, 2, 3 & 4)
+# TechBridge Website (Tasks 1, 2, 3, 4 & 5)
 
 A responsive website for **TechBridge by Baselink Services Limited**, a learning and career development initiative bridging learning to real-world experience.
 
-Built with **HTML5 + CSS3** (no frameworks), plus vanilla JavaScript for the mobile navigation and the interactive two-track internship roadmap.
+Built with **HTML5 + CSS3** (no frameworks), plus vanilla JavaScript for the mobile navigation, the interactive two-track internship roadmap and the Challenge Hub.
 
 ## Pages
 
@@ -12,6 +12,7 @@ Built with **HTML5 + CSS3** (no frameworks), plus vanilla JavaScript for the mob
 | `programs.html` | Dedicated Programs experience: overview, Data Analytics and Web Development program cards, skills, differentiation guide, internship connection and application CTA. |
 | `tasks.html` | Internship Tasks experience: an introduction to the 30-day internship, an at-a-glance Day 1 to Day 26 route card, and a difficulty-graded timeline of all eight practical tasks. |
 | `roadmap.html` | Interactive Internship Roadmap: a 30-day structure card and a two-track switcher showing all eight Data Analytics and Web Development tasks, difficulty progression and optional saved progress. |
+| `challenges.html` | Challenge Hub: eight original practice challenges across both tracks, with track and difficulty filters, keyword search, a live result count and a full detail dialog for every challenge. |
 
 ## What the site communicates
 
@@ -27,6 +28,10 @@ Built with **HTML5 + CSS3** (no frameworks), plus vanilla JavaScript for the mob
 - How the tasks build progressively from beginner HTML and CSS to more advanced, interactive interfaces, using the difficulty levels Beginner, Beginner to Intermediate, Intermediate and Intermediate to Advanced Beginner
 - An interactive track switcher with a clear **currently viewing** state, the full 30-day structure and a difficulty arc for each track
 - Optional personal progress marking, saved in the browser only and clearly identified as a planning aid rather than an official completion record
+- A **Challenge Hub** with eight original practice challenges, four per track, each showing its name, track, difficulty, short description, expected outcome and a View Challenge button
+- A combined track, difficulty and keyword search that updates without a page reload, with a live result count, a no-results state, a reset control and shareable filter URLs
+- A challenge detail dialog covering the brief, skills, suggested tools, steps, what to submit and success criteria, plus a shareable deep link for each challenge
+- A clear statement that the challenges are practice activities, not official internship tasks, assessments or deadlines
 - How to apply (official application form) and join the community (official WhatsApp group)
 - Official contact details: techbridgebaslink@gmail.com, LinkedIn, Instagram and Facebook
 
@@ -38,8 +43,9 @@ techbridge-task-1/
 ├── programs.html                  # Programs experience (Task 2)
 ├── tasks.html                     # Internship Tasks experience (Task 3)
 ├── roadmap.html                   # Interactive Internship Roadmap (Task 4)
+├── challenges.html                # Challenge Hub (Task 5)
 ├── style.css                      # Shared design tokens, components, all pages
-├── script.js                      # Mobile navigation and two-track roadmap
+├── script.js                      # Mobile navigation, roadmap and Challenge Hub
 ├── images/
 │   ├── techbridge-logo.png        # Official TechBridge logo
 │   └── internship-illustration.png
@@ -48,6 +54,8 @@ techbridge-task-1/
 ├── tasks-screenshot.png           # Desktop screenshot of the Internship Tasks experience
 ├── roadmap-data-analytics-screenshot.png  # Roadmap with Data Analytics selected
 ├── roadmap-web-development-screenshot.png # Roadmap with Web Development selected
+├── challenges-screenshot.png      # Desktop screenshot of the Challenge Hub
+├── challenges-detail-screenshot.png       # Challenge detail dialog
 └── README.md
 ```
 
@@ -59,7 +67,16 @@ Open `index.html` in any modern browser. No build step or dependencies are requi
 
 Deployed via Vercel: https://techbridge-task-1-plum.vercel.app
 
-The Programs page is available at `/programs.html`, the Internship Tasks page at `/tasks.html`, and the Interactive Internship Roadmap at `/roadmap.html` on the same deployment.
+The Programs page is available at `/programs.html`, the Internship Tasks page at `/tasks.html`, the Interactive Internship Roadmap at `/roadmap.html` and the Challenge Hub at `/challenges.html` on the same deployment.
+
+## Task 5 screenshots
+
+| File | Shows |
+| --- | --- |
+| `challenges-screenshot.png` | The Challenge Hub with all eight practice challenges visible and the filter toolbar in its default state. |
+| `challenges-detail-screenshot.png` | The challenge detail dialog open over the hub, showing the brief, skills, tools and steps. |
+
+Both are desktop captures at 1440px wide.
 
 ## Task 4 screenshots
 
@@ -72,9 +89,9 @@ Both are full-page desktop captures at 1440px wide.
 
 ## Responsive behaviour
 
-- **Desktop (≥ 981px):** two-column heroes, two-column program cards, a two-column Tasks journey with a sticky introduction, and a two-column roadmap task grid. The seven navigation items tighten their spacing between 981px and 1180px so the header stays on one line.
-- **Tablet (641–980px):** two-column hero, journey and roadmap layouts that fill the width, key figures spread across three columns, program cards and comparison panels side by side, call to action buttons in a full-width row, a two-column footer, and the mobile navigation.
-- **Mobile (≤ 640px):** single-column content that uses the full width, full-width buttons, a single-column track switcher and task list, a compact 30-day grid, two-column "Why TechBridge" feature grid, a single-column difficulty legend, and a full-height off-canvas menu that slides in from the right over a blurred backdrop.
+- **Desktop (≥ 981px):** two-column heroes, two-column program cards, a two-column Tasks journey with a sticky introduction, and a two-column roadmap task grid. The challenge library uses four cards per row with the filter toolbar beside the search field. The eight navigation items tighten their spacing between 981px and 1260px so the header stays on one line.
+- **Tablet (641–980px):** two-column hero, journey and roadmap layouts that fill the width, key figures spread across three columns, program cards and comparison panels side by side, call to action buttons in a full-width row, a two-column footer, and the mobile navigation. The challenge hero stacks, the filters move below the search field and the challenge grid drops to two columns.
+- **Mobile (≤ 640px):** single-column content that uses the full width, full-width buttons, a single-column track switcher and task list, a compact 30-day grid, two-column "Why TechBridge" feature grid, a single-column difficulty legend, and a full-height off-canvas menu that slides in from the right over a blurred backdrop. Challenge cards become a single column, the filters stack, and the challenge dialog becomes a full-width bottom sheet.
 
 ## Accessibility
 
@@ -86,9 +103,17 @@ Both are full-page desktop captures at 1440px wide.
 - The track switcher uses ARIA tabs with roving `tabindex` and Arrow Left, Arrow Right, Home and End keyboard support
 - Track changes update a polite `role="status"` live region, the visible "Currently viewing" label and the panel's accessible name
 - The progress bar uses `role="progressbar"` with live values, completion buttons use `aria-pressed`, and the reset control uses `aria-disabled`
-- A `<noscript>` message points visitors to the Tasks page when JavaScript is unavailable
+- Challenge filters are grouped with `role="group"` labels, expose their state with `aria-pressed` and update a polite `role="status"` result count
+- The challenge detail uses a native dialog with `aria-labelledby`, a visible close button, Escape to close, focus trapped while open and focus returned to the View Challenge button on close
+- Challenge search has a visible label, and each View Challenge button includes the challenge name for screen readers
+- Shareable URLs keep the track, difficulty, search term and open challenge without a page reload
+- A `<noscript>` message points visitors to the Programs page when JavaScript is unavailable
 - Respect for `prefers-reduced-motion`
 - Descriptive `aria-label`s on icon-only links
+
+## Developer note, Task 5
+
+> I built Task 5 as a dedicated Challenge Hub that extends the warm off-white, navy and cobalt system to a new kind of page. All eight original practice challenges live in one array of objects, and each object holds its track, difficulty, description, expected outcome, skills, tools, steps and success criteria, so the same data drives the cards, the filters and the detail dialog. The filter function combines a track value, a difficulty value and a search term, then re-renders the grid from a template and updates a live result count, an empty state and the URL. Choosing View Challenge fills a native `<dialog>` and opens it with the browser's built-in focus handling, and closing returns focus to the button that opened it. One challenge was keeping the filter state and the open challenge in the same URL without a reload, which I solved by writing both through `replaceState` and reading them back on load. The challenge content is clearly labelled as practice work rather than official internship tasks.
 
 ## Developer note, Task 4
 

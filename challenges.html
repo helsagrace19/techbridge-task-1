@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challenge Hub — TechBridge</title>
+  <meta name="description" content="Explore eight original practice challenges across the TechBridge Data Analytics and Web Development tracks. Filter by track and difficulty, then open any challenge for the full brief.">
+  <meta name="theme-color" content="#f4f2ee">
+  <link rel="icon" href="images/techbridge-logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <a class="brand__link" href="index.html" aria-label="TechBridge home">
+          <img src="images/techbridge-logo.png" alt="TechBridge" width="578" height="115">
+        </a>
+        <p class="brand__tagline">Bridging Learning to Real-World Experience</p>
+      </div>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+        <span class="nav-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="nav-toggle__text" aria-hidden="true">Menu</span>
+      </button>
+
+      <nav class="site-nav" id="primary-nav" aria-label="Primary">
+        <ul class="nav-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="programs.html">Programs</a></li>
+          <li><a href="index.html#internship">Internship</a></li>
+          <li><a href="tasks.html">Tasks</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="challenges.html" class="is-active" aria-current="page">Challenges</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+        <a class="btn btn--primary btn--sm nav-cta" href="https://forms.gle/8EbdSy5ttGfLZfjv5" target="_blank" rel="noopener noreferrer">
+          Apply Now
+          <span class="btn__arrow" aria-hidden="true">→</span>
+          <span class="sr-only">(opens the official application form in a new tab)</span>
+        </a>
+      </nav>
+
+      <a class="btn btn--primary btn--sm header-cta" href="https://forms.gle/8EbdSy5ttGfLZfjv5" target="_blank" rel="noopener noreferrer">
+        Apply Now
+        <span class="btn__arrow" aria-hidden="true">→</span>
+        <span class="sr-only">(opens the official application form in a new tab)</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="nav-backdrop" aria-hidden="true"></div>
+
+  <main id="main">
+    <!-- Challenge Hub hero -->
+    <section class="challenge-hero" aria-labelledby="challenge-title">
+      <div class="container challenge-hero__grid">
+        <div class="challenge-hero__copy">
+          <p class="pill">Challenge Hub</p>
+          <h1 id="challenge-title">Try the work before you <em>take it on.</em></h1>
+          <p class="challenge-hero__lede">The TechBridge internship is built on practical work. This hub lets you sample it: eight original practice challenges across Data Analytics and Web Development, each with a focused brief and a clear result to aim for.</p>
+
+          <div class="challenge-hero__actions">
+            <a class="btn btn--primary" href="#challenges">
+              Browse the challenges
+              <span class="btn__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="btn btn--ghost" href="tasks.html">
+              See the internship tasks
+              <span class="btn__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <ul class="challenge-hero__meta">
+            <li>
+              <strong>2</strong>
+              <span>Internship tracks</span>
+            </li>
+            <li>
+              <strong>8</strong>
+              <span>Practice challenges</span>
+            </li>
+            <li>
+              <strong>3</strong>
+              <span>Difficulty levels</span>
+            </li>
+          </ul>
+
+          <p class="challenge-hero__note">
+            <span class="challenge-hero__note-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 11v5.5M12 7.6h.01"/>
+              </svg>
+            </span>
+            Practice challenge library. These activities are original exercises for this page and are not official internship tasks, assessments or deadlines.
+          </p>
+        </div>
+
+        <aside class="mix-card" aria-labelledby="mix-title">
+          <div class="mix-card__head">
+            <p class="mix-card__label" id="mix-title">The mix at a glance</p>
+            <span class="mix-card__range">2 tracks</span>
+          </div>
+
+          <div class="mix-group">
+            <p class="mix-group__title">Challenges by track</p>
+            <ul class="mix-list">
+              <li class="mix-row">
+                <span class="mix-row__label">Data Analytics</span>
+                <span class="mix-row__bar" aria-hidden="true"><i style="width: 100%"></i></span>
+                <span class="mix-row__value">4</span>
+              </li>
+              <li class="mix-row mix-row--navy">
+                <span class="mix-row__label">Web Development</span>
+                <span class="mix-row__bar" aria-hidden="true"><i style="width: 100%"></i></span>
+                <span class="mix-row__value">4</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mix-group">
+            <p class="mix-group__title">Challenges by difficulty</p>
+            <ul class="mix-list">
+              <li class="mix-row mix-row--soft">
+                <span class="mix-row__label">Beginner</span>
+                <span class="mix-row__bar" aria-hidden="true"><i style="width: 50%"></i></span>
+                <span class="mix-row__value">2</span>
+              </li>
+              <li class="mix-row">
+                <span class="mix-row__label">Intermediate</span>
+                <span class="mix-row__bar" aria-hidden="true"><i style="width: 100%"></i></span>
+                <span class="mix-row__value">4</span>
+              </li>
+              <li class="mix-row mix-row--deep">
+                <span class="mix-row__label">Advanced</span>
+                <span class="mix-row__bar" aria-hidden="true"><i style="width: 50%"></i></span>
+                <span class="mix-row__value">2</span>
+              </li>
+            </ul>
+          </div>
+
+          <p class="mix-card__note">Every challenge is self-contained. Pick one, work through the brief at your own pace, and keep the result for your portfolio.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Challenge library -->
+    <section class="section challenge-library" id="challenges" aria-labelledby="library-title">
+      <div class="container">
+        <div class="challenge-head">
+          <div>
+            <p class="pill">The Challenge Library</p>
+            <h2 id="library-title">Find one that fits where you are.</h2>
+          </div>
+          <p class="challenge-head__intro">Filter by track and difficulty, or search by keyword. Every card opens the full brief on this page, with no reload.</p>
+        </div>
+
+        <div class="challenge-controls">
+          <div class="challenge-search">
+            <label class="challenge-search__label" for="challenge-search">Search challenges</label>
+            <div class="challenge-search__field">
+              <span class="challenge-search__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <circle cx="11" cy="11" r="6.5"/>
+                  <path d="m16 16 4.5 4.5"/>
+                </svg>
+              </span>
+              <input type="search" id="challenge-search" name="q" placeholder="Try SQL, pivot or form" autocomplete="off" spellcheck="false">
+            </div>
+          </div>
+
+          <div class="challenge-filters">
+            <div class="filter-group" role="group" aria-label="Filter challenges by track">
+              <span class="filter-group__label" aria-hidden="true">Track</span>
+              <div class="filter-chips">
+                <button class="filter-chip is-active" type="button" data-filter-track="all" aria-pressed="true">All</button>
+                <button class="filter-chip" type="button" data-filter-track="data-analytics" aria-pressed="false">Data Analytics</button>
+                <button class="filter-chip" type="button" data-filter-track="web-development" aria-pressed="false">Web Development</button>
+              </div>
+            </div>
+
+            <div class="filter-group" role="group" aria-label="Filter challenges by difficulty">
+              <span class="filter-group__label" aria-hidden="true">Difficulty</span>
+              <div class="filter-chips">
+                <button class="filter-chip is-active" type="button" data-filter-level="all" aria-pressed="true">All</button>
+                <button class="filter-chip" type="button" data-filter-level="beginner" aria-pressed="false">Beginner</button>
+                <button class="filter-chip" type="button" data-filter-level="intermediate" aria-pressed="false">Intermediate</button>
+                <button class="filter-chip" type="button" data-filter-level="advanced" aria-pressed="false">Advanced</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="challenge-status">
+          <p class="challenge-count" id="challenge-count" role="status" aria-live="polite"><strong id="challenge-count-value">8</strong> <span id="challenge-count-label">of 8 challenges</span></p>
+          <button class="challenge-reset" id="challenge-reset" type="button" aria-disabled="true">Reset filters</button>
+        </div>
+
+        <div class="challenge-grid" id="challenge-grid"></div>
+
+        <div class="challenge-empty" id="challenge-empty" hidden>
+          <span class="challenge-empty__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <circle cx="11" cy="11" r="6.5"/>
+              <path d="m16 16 4.5 4.5"/>
+              <path d="M8.6 11h4.8"/>
+            </svg>
+          </span>
+          <h3>No challenges match those filters.</h3>
+          <p>Try another track or difficulty, or use a broader search term.</p>
+          <button class="btn btn--primary btn--sm" id="challenge-empty-reset" type="button">
+            Clear all filters
+            <span class="btn__arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <noscript>
+          <p class="challenge-noscript">The challenge library needs JavaScript to filter and open challenge briefs. You can still explore both tracks on the <a href="programs.html">Programs page</a> and see the official tasks on the <a href="tasks.html">Internship Tasks page</a>.</p>
+        </noscript>
+      </div>
+    </section>
+
+    <!-- Apply / Tasks -->
+    <section class="section cta-section" id="apply" aria-labelledby="cta-title">
+      <div class="container">
+        <div class="cta-band">
+          <span class="cta-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="m22 2-7 20-4-9-9-4 20-7Z"/>
+              <path d="M22 2 11 13"/>
+            </svg>
+          </span>
+
+          <div class="cta-copy">
+            <h2 id="cta-title">Enjoyed a challenge? Take the next step.</h2>
+            <p>Apply for the TechBridge internship, or see how the eight official tasks build across the 30-day program.</p>
+          </div>
+
+          <div class="cta-actions">
+            <a class="btn btn--cream" href="https://forms.gle/8EbdSy5ttGfLZfjv5" target="_blank" rel="noopener noreferrer">
+              TechBridge Internship Application Form
+              <span class="btn__arrow" aria-hidden="true">→</span>
+              <span class="sr-only">(opens in a new tab)</span>
+            </a>
+            <a class="btn btn--outline-light" href="tasks.html">
+              Explore the 8 tasks
+              <span class="btn__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="footer-logo" href="index.html" aria-label="TechBridge home">
+            <img src="images/techbridge-logo.png" alt="TechBridge" width="578" height="115">
+          </a>
+          <p class="footer-org">TechBridge by Baselink Services Limited</p>
+          <p class="footer-tagline">Bridging Learning to Real-World Experience</p>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer">
+          <h2 class="footer-heading">Quick Links</h2>
+          <div class="footer-links">
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="index.html#about">About</a></li>
+              <li><a href="programs.html">Programs</a></li>
+              <li><a href="index.html#internship">Internship</a></li>
+            </ul>
+            <ul>
+              <li><a href="tasks.html">Tasks</a></li>
+              <li><a href="roadmap.html">Roadmap</a></li>
+              <li><a href="challenges.html">Challenges</a></li>
+              <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="footer-contact">
+          <h2 class="footer-heading">Contact</h2>
+          <ul>
+            <li>
+              <a href="mailto:techbridgebaslink@gmail.com">
+                <svg class="contact-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                  <rect x="2.5" y="5" width="19" height="14" rx="2.5" stroke="currentColor" stroke-width="1.7"/>
+                  <path d="m3.5 6.5 8.5 6.5 8.5-6.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                techbridgebaslink@gmail.com
+              </a>
+            </li>
+          </ul>
+          <div class="social-row">
+            <a class="social-btn" href="https://www.linkedin.com/company/techbridge-services/" target="_blank" rel="noopener noreferrer" aria-label="TechBridge on LinkedIn (opens in a new tab)">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M4.98 3.5a2.5 2.5 0 1 1-.02 5 2.5 2.5 0 0 1 .02-5ZM3 9.2h4V21H3V9.2Zm6.6 0h3.8v1.6h.1c.53-1 1.83-2.06 3.75-2.06 4.01 0 4.75 2.64 4.75 6.07V21h-4v-5.35c0-1.28-.02-2.92-1.78-2.92-1.78 0-2.06 1.39-2.06 2.83V21h-4V9.2h-.56Z"/>
+              </svg>
+            </a>
+            <a class="social-btn" href="https://www.instagram.com/techbridgeserves" target="_blank" rel="noopener noreferrer" aria-label="TechBridge on Instagram (opens in a new tab)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false">
+                <rect x="3" y="3" width="18" height="18" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+            <a class="social-btn" href="https://www.facebook.com/p/Baselink-Services-100066771475783/" target="_blank" rel="noopener noreferrer" aria-label="TechBridge on Facebook (opens in a new tab)">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M13.5 21.5v-6.9h2.32l.44-2.86H13.5V9.87c0-.83.23-1.39 1.42-1.39h1.44V5.94c-.25-.03-1.1-.1-2.1-.1-2.08 0-3.5 1.27-3.5 3.6v2.3H8.4v2.86h2.36v6.9h2.74Z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 TechBridge by Baselink Services Limited. All rights reserved.</p>
+        <p class="footer-motto">Learn. Build. Grow.</p>
+      </div>
+    </div>
+  </footer>
+
+  <template id="challenge-template">
+    <article class="challenge-card">
+      <div class="challenge-card__top">
+        <span class="challenge-track" data-field="track"></span>
+        <span class="level" data-field="level">
+          <span class="level__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span data-field="difficulty"></span>
+        </span>
+      </div>
+      <h3 data-field="title"></h3>
+      <p class="challenge-card__description" data-field="description"></p>
+      <div class="challenge-card__outcome">
+        <span class="challenge-card__outcome-label">Expected outcome</span>
+        <p data-field="outcome"></p>
+      </div>
+      <div class="challenge-card__foot">
+        <p class="challenge-card__time"><span>Time</span> <strong data-field="time"></strong></p>
+        <button class="btn btn--ghost btn--sm challenge-card__button" type="button" data-open>
+          View Challenge
+          <span class="btn__arrow" aria-hidden="true">→</span>
+          <span class="sr-only" data-field="button-label"></span>
+        </button>
+      </div>
+    </article>
+  </template>
+
+  <dialog class="challenge-dialog" id="challenge-dialog" aria-labelledby="dialog-title">
+    <div class="challenge-dialog__panel">
+      <div class="challenge-dialog__head">
+        <div class="challenge-dialog__badges">
+          <span class="challenge-track" id="dialog-track"></span>
+          <span class="level" id="dialog-level">
+            <span class="level__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span id="dialog-difficulty"></span>
+          </span>
+        </div>
+        <button class="challenge-dialog__close" id="dialog-close" type="button" aria-label="Close challenge details">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" focusable="false" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="challenge-dialog__scroll">
+        <p class="challenge-dialog__eyebrow">Practice challenge</p>
+        <h2 id="dialog-title"></h2>
+        <p class="challenge-dialog__summary" id="dialog-summary"></p>
+
+        <dl class="challenge-dialog__meta">
+          <div>
+            <dt>Track</dt>
+            <dd id="dialog-track-name"></dd>
+          </div>
+          <div>
+            <dt>Difficulty</dt>
+            <dd id="dialog-level-name"></dd>
+          </div>
+          <div>
+            <dt>Time needed</dt>
+            <dd id="dialog-time"></dd>
+          </div>
+        </dl>
+
+        <div class="challenge-dialog__section">
+          <h3 id="dialog-brief-title">The brief</h3>
+          <p id="dialog-brief"></p>
+        </div>
+
+        <div class="challenge-dialog__columns">
+          <div class="challenge-dialog__section">
+            <h3>Skills you will practise</h3>
+            <ul class="challenge-tags" id="dialog-skills"></ul>
+          </div>
+          <div class="challenge-dialog__section">
+            <h3>Suggested tools</h3>
+            <ul class="challenge-tags challenge-tags--tools" id="dialog-tools"></ul>
+          </div>
+        </div>
+
+        <div class="challenge-dialog__section">
+          <h3>Step by step</h3>
+          <ol class="challenge-steps" id="dialog-steps"></ol>
+        </div>
+
+        <div class="challenge-dialog__section">
+          <h3>What to submit</h3>
+          <p id="dialog-deliverable"></p>
+        </div>
+
+        <div class="challenge-dialog__section">
+          <h3>Done when</h3>
+          <ul class="challenge-done" id="dialog-done"></ul>
+        </div>
+
+        <p class="challenge-dialog__note" id="dialog-note">This is an original TechBridge practice activity created for the Challenge Hub. It is not an official internship task, assessment or deadline.</p>
+      </div>
+
+      <div class="challenge-dialog__foot">
+        <button class="challenge-copy" id="dialog-copy" type="button">
+          <span class="challenge-copy__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <rect x="9" y="9" width="11" height="11" rx="2.5"/>
+              <path d="M15 5.5A2.5 2.5 0 0 0 12.5 3H6.5A2.5 2.5 0 0 0 4 5.5v6A2.5 2.5 0 0 0 6.5 14"/>
+            </svg>
+          </span>
+          <span id="dialog-copy-text">Copy link to this challenge</span>
+        </button>
+        <button class="btn btn--primary btn--sm" id="dialog-done-close" type="button" data-close>
+          Close
+          <span class="btn__arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>
