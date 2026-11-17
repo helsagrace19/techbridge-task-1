@@ -105,6 +105,7 @@ Both are full-page desktop captures at 1440px wide.
 - The progress bar uses `role="progressbar"` with live values, completion buttons use `aria-pressed`, and the reset control uses `aria-disabled`
 - Challenge filters are grouped with `role="group"` labels, expose their state with `aria-pressed` and update a polite `role="status"` result count
 - The challenge detail uses a native dialog with `aria-labelledby`, a visible close button, Escape to close, focus trapped while open and focus returned to the View Challenge button on close
+- The dialog body is a labelled, focusable region, so keyboard users can scroll a long brief without leaving the dialog
 - Challenge search has a visible label, and each View Challenge button includes the challenge name for screen readers
 - Shareable URLs keep the track, difficulty, search term and open challenge without a page reload
 - A `<noscript>` message points visitors to the Programs page when JavaScript is unavailable

@@ -288,8 +288,8 @@ ol {
 
 .header-inner {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
   min-height: 82px;
@@ -297,6 +297,7 @@ ol {
 
 .brand {
   display: flex;
+  flex: 0 0 auto;
   flex-direction: column;
   gap: 0.1rem;
 }
@@ -321,9 +322,11 @@ ol {
 }
 
 .site-nav {
-  justify-self: center;
   display: flex;
+  flex: 1 1 480px;
+  min-width: 0;
   align-items: center;
+  justify-content: center;
 }
 
 .nav-list {
@@ -378,7 +381,8 @@ ol {
 }
 
 .header-cta {
-  justify-self: end;
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .nav-toggle {
@@ -1221,6 +1225,7 @@ ol {
   }
 
   .header-inner {
+    display: grid;
     grid-template-columns: 1fr auto;
     min-height: 76px;
   }
@@ -4081,9 +4086,23 @@ ol {
 }
 
 /* Eight navigation items need a little more room on mid-size desktops */
+@media (min-width: 981px) {
+  .nav-list {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 4px;
+  }
+}
+
+@media (min-width: 1261px) {
+  .nav-list {
+    column-gap: 27px;
+  }
+}
+
 @media (min-width: 981px) and (max-width: 1260px) {
   .nav-list {
-    gap: clamp(0.55rem, 1.15vw, 0.95rem);
+    column-gap: clamp(9px, 1.15vw, 15px);
   }
 
   .nav-list a {
