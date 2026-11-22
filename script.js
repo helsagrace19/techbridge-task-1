@@ -1302,3 +1302,851 @@
     /* Deep links are a convenience; the library still works without them. */
   }
 })();
+
+/* ============================================================
+   Intern Dashboard (Task 6)
+   Task data, progress tracking, filters and task detail dialog.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var grid = document.getElementById("task-grid");
+  var template = document.getElementById("dash-task-template");
+
+  if (!grid || !template) {
+    return;
+  }
+
+  var STORAGE_KEY = "techbridgeDashboardProgress.v1";
+  var TOTAL_TASKS = 8;
+
+  /* Official TechBridge task titles and descriptions. The focus and
+     evidence fields are guidance for this practice dashboard. */
+  var tasks = [
+    {
+      number: 1,
+      title: "Build the TechBridge Homepage",
+      day: 1,
+      description: "Create the first version of the TechBridge website using HTML and CSS.",
+      difficulty: "Beginner",
+      level: 1,
+      focus: [
+        "Page structure, header and footer",
+        "Responsive layout with flexible units",
+        "Typography, colour and button consistency"
+      ],
+      evidence: "A working homepage with a clear hero, readable sections and navigation that still works on a small screen."
+    },
+    {
+      number: 2,
+      title: "Build the TechBridge Programs Experience",
+      day: 4,
+      description: "Create a Programs experience that presents TechBridge's available learning programs.",
+      difficulty: "Beginner → Intermediate",
+      level: 2,
+      focus: [
+        "Program cards and comparison content",
+        "Clear calls to action",
+        "Responsive multi-column layout"
+      ],
+      evidence: "A Programs page that explains each pathway and guides visitors toward the application form."
+    },
+    {
+      number: 3,
+      title: "Build the Internship Tasks Experience",
+      day: 8,
+      description: "Create an interface that presents the TechBridge internship tasks and helps users understand the internship journey.",
+      difficulty: "Beginner → Intermediate",
+      level: 2,
+      focus: [
+        "Task journey and day labels",
+        "Difficulty cues without clutter",
+        "Readable cards on every screen size"
+      ],
+      evidence: "A Tasks page that shows all eight tasks, their timing and what each one involves."
+    },
+    {
+      number: 4,
+      title: "Build an Interactive Internship Roadmap",
+      day: 11,
+      description: "Use JavaScript to allow visitors to switch between the Data Analytics and Web Development internship tracks.",
+      difficulty: "Beginner → Intermediate",
+      level: 2,
+      focus: [
+        "Track switching with JavaScript",
+        "Keyboard support for the track controls",
+        "URL state and saved progress"
+      ],
+      evidence: "A roadmap where both tracks can be explored without a page refresh and progress survives a reload."
+    },
+    {
+      number: 5,
+      title: "Build the Intern Registration Experience",
+      day: 15,
+      description: "Create a professional registration and onboarding interface for TechBridge interns.",
+      difficulty: "Intermediate",
+      level: 3,
+      focus: [
+        "Form layout and field grouping",
+        "Inline validation and error messages",
+        "Onboarding copy that sets expectations"
+      ],
+      evidence: "A registration screen with labelled fields, helpful validation and a clear confirmation state."
+    },
+    {
+      number: 6,
+      title: "Build the Task Submission System",
+      day: 19,
+      description: "Create an interface through which interns can prepare and submit their task work.",
+      difficulty: "Intermediate",
+      level: 3,
+      focus: [
+        "Submission fields and file selection",
+        "Draft and confirmation states",
+        "Feedback when something is missing"
+      ],
+      evidence: "A submission interface that lets an intern attach work, review the details and confirm the handoff."
+    },
+    {
+      number: 7,
+      title: "Build the Intern Dashboard",
+      day: 22,
+      description: "Create a dashboard where an intern can view their profile, progress, tasks and submissions.",
+      difficulty: "Intermediate",
+      level: 3,
+      focus: [
+        "Progress summary and task list",
+        "Status filters and task details",
+        "Saving progress in the browser"
+      ],
+      evidence: "A dashboard that shows completed, current and upcoming work and updates without a reload."
+    },
+    {
+      number: 8,
+      title: "Build the Complete TechBridge Internship Platform",
+      day: 26,
+      description: "Combine the different components created during the internship into a complete TechBridge platform.",
+      difficulty: "Intermediate",
+      level: 3,
+      focus: [
+        "Shared navigation across every page",
+        "Final responsive and accessibility checks",
+        "One consistent design system"
+      ],
+      evidence: "A complete platform where every page is linked, visually consistent and usable on desktop, tablet and mobile."
+    }
+  ];
+
+  var STATUS_LABELS = {
+    "completed": "Completed",
+    "in-progress": "In progress",
+    "not-started": "Not started"
+  };
+
+  function createDefaultStatuses() {
+    var defaults = {};
+    tasks.forEach(function (task) {
+      if (task.number <= 5) {
+        defaults[task.number] = "completed";
+      } else if (task.number === 6) {
+        defaults[task.number] = "in-progress";
+      } else {
+        defaults[task.number] = "not-started";
+      }
+    });
+    return defaults;
+  }
+
+  var storageAvailable = (function () {
+    try {
+      var testKey = "__techbridgeDashboardTest";
+      window.localStorage.setItem(testKey, "1");
+      window.localStorage.removeItem(testKey);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  })();
+
+  function readStatuses() {
+    var fallback = createDefaultStatuses();
+    if (!storageAvailable) {
+      return fallback;
+    }
+
+    try {
+      var raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        return fallback;
+      }
+      var parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object") {
+        return fallback;
+      }
+      var valid = {};
+      var isValid = tasks.every(function (task) {
+        var value = parsed[String(task.number)];
+        if (value === "completed" || value === "in-progress" || value === "not-started") {
+          valid[task.number] = value;
+          return true;
+        }
+        return false;
+      });
+      return isValid ? valid : fallback;
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  var statuses = readStatuses();
+  var filter = "all";
+  var query = "";
+  var activeTaskNumber = null;
+  var opener = null;
+  var toastTimer = null;
+
+  var searchInput = document.getElementById("task-search");
+  var filterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-status-filter]"));
+  var filterReset = document.getElementById("filter-reset");
+  var emptyReset = document.getElementById("empty-reset");
+  var emptyState = document.getElementById("task-empty");
+  var taskCount = document.getElementById("task-count");
+  var progressCard = document.getElementById("progress-card");
+  var progressCompleted = document.getElementById("progress-completed");
+  var statCompleted = document.getElementById("stat-completed");
+  var statRemaining = document.getElementById("stat-remaining");
+  var statPercent = document.getElementById("stat-percent");
+  var progressBar = document.getElementById("dashboard-progress-bar");
+  var progressFill = document.getElementById("dashboard-progress-fill");
+  var barLabel = document.getElementById("bar-label");
+  var progressPercent = document.getElementById("progress-percent");
+  var progressMessage = document.getElementById("progress-message");
+  var completeBanner = document.getElementById("all-complete");
+  var profilePercent = document.getElementById("profile-percent");
+  var profileBar = document.getElementById("profile-bar");
+  var currentTaskLabel = document.getElementById("current-task-label");
+  var currentTaskTitle = document.getElementById("current-task-title");
+  var currentTaskNumber = document.getElementById("current-task-number");
+  var currentTaskDay = document.getElementById("current-task-day");
+  var currentTaskLevel = document.getElementById("current-task-level");
+  var internshipStatus = document.getElementById("internship-status");
+  var toast = document.getElementById("dashboard-toast");
+  var dialog = document.getElementById("task-dialog");
+  var dialogStatus = document.getElementById("task-dialog-status");
+  var dialogStatusLabel = document.getElementById("task-dialog-status-label");
+  var dialogLevel = document.getElementById("task-dialog-level");
+  var dialogDifficulty = document.getElementById("task-dialog-difficulty");
+  var dialogTitle = document.getElementById("task-dialog-title");
+  var dialogDescription = document.getElementById("task-dialog-description");
+  var dialogNumber = document.getElementById("task-dialog-number");
+  var dialogDay = document.getElementById("task-dialog-day");
+  var dialogStatusText = document.getElementById("task-dialog-status-text");
+  var dialogFocus = document.getElementById("task-dialog-focus");
+  var dialogEvidence = document.getElementById("task-dialog-evidence");
+  var dialogAction = document.getElementById("task-dialog-action");
+  var dialogClose = document.getElementById("task-dialog-close");
+  var dialogDone = document.getElementById("task-dialog-done");
+  var countAll = document.getElementById("count-all");
+  var countCompleted = document.getElementById("count-completed");
+  var countInProgress = document.getElementById("count-in-progress");
+  var countNotStarted = document.getElementById("count-not-started");
+  var continueButtons = Array.prototype.slice.call(document.querySelectorAll("[data-continue]"));
+
+  function getTask(number) {
+    return tasks.filter(function (task) {
+      return task.number === number;
+    })[0];
+  }
+
+  function countByStatus(status) {
+    return tasks.filter(function (task) {
+      return statuses[task.number] === status;
+    }).length;
+  }
+
+  function getCompletedCount() {
+    return countByStatus("completed");
+  }
+
+  function getMetrics() {
+    var completed = getCompletedCount();
+    var remaining = TOTAL_TASKS - completed;
+    var percent = Math.round((completed / TOTAL_TASKS) * 1000) / 10;
+    return {
+      completed: completed,
+      remaining: remaining,
+      percent: percent,
+      percentText: Number.isInteger(percent) ? percent + "%" : percent.toFixed(1) + "%"
+    };
+  }
+
+  function saveStatuses() {
+    if (!storageAvailable) {
+      return;
+    }
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(statuses));
+    } catch (error) {
+      storageAvailable = false;
+    }
+  }
+
+  function showToast(message) {
+    if (!toast) {
+      return;
+    }
+    toast.textContent = message;
+    toast.classList.add("is-visible");
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(function () {
+      toast.classList.remove("is-visible");
+    }, 4200);
+  }
+
+  function setStatusClass(element, status) {
+    element.classList.remove("is-completed", "is-in-progress", "is-not-started");
+    element.classList.add("is-" + status);
+  }
+
+  function setLevel(element, level) {
+    element.classList.remove("level--1", "level--2", "level--3", "level--4");
+    element.classList.add("level--" + level);
+  }
+
+  function renderProgress() {
+    var metrics = getMetrics();
+    var completed = metrics.completed;
+    var remaining = metrics.remaining;
+
+    progressCompleted.textContent = completed;
+    statCompleted.textContent = completed;
+    statRemaining.textContent = remaining;
+    statPercent.textContent = metrics.percentText;
+    progressPercent.textContent = metrics.percentText;
+    profilePercent.textContent = metrics.percentText;
+    barLabel.textContent = completed + " of " + TOTAL_TASKS + " tasks completed";
+    progressMessage.textContent = remaining === 0
+      ? "All tasks complete"
+      : remaining === 1
+        ? "1 task remaining"
+        : remaining + " tasks remaining";
+
+    progressFill.style.width = metrics.percent + "%";
+    profileBar.style.width = metrics.percent + "%";
+
+    progressBar.setAttribute("aria-valuenow", String(completed));
+    progressBar.setAttribute("aria-valuetext", completed + " of " + TOTAL_TASKS + " tasks completed");
+
+    completeBanner.hidden = completed !== TOTAL_TASKS;
+    progressCard.classList.toggle("is-complete", completed === TOTAL_TASKS);
+    internshipStatus.textContent = completed === TOTAL_TASKS ? "Completed" : "In progress";
+
+    countAll.textContent = tasks.length;
+    countCompleted.textContent = countByStatus("completed");
+    countInProgress.textContent = countByStatus("in-progress");
+    countNotStarted.textContent = countByStatus("not-started");
+  }
+
+  function renderProfile() {
+    var current = tasks.filter(function (task) {
+      return statuses[task.number] === "in-progress";
+    })[0];
+    var label = "Current task";
+
+    if (!current) {
+      current = tasks.filter(function (task) {
+        return statuses[task.number] === "not-started";
+      })[0];
+      label = "Next up";
+    }
+
+    if (current) {
+      currentTaskLabel.textContent = label;
+      currentTaskTitle.textContent = current.title;
+      currentTaskNumber.textContent = "Task 0" + current.number;
+      currentTaskDay.textContent = "Day " + current.day;
+      currentTaskLevel.textContent = current.difficulty;
+      continueButtons.forEach(function (button) {
+        button.textContent = label === "Current task" ? "Continue current task" : "Start next task";
+        var arrow = document.createElement("span");
+        arrow.className = "btn__arrow";
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "→";
+        button.appendChild(arrow);
+      });
+      return;
+    }
+
+    currentTaskLabel.textContent = "Program complete";
+    currentTaskTitle.textContent = "Every task is complete.";
+    currentTaskNumber.textContent = "8 of 8 tasks";
+    currentTaskDay.textContent = "Build finished";
+    currentTaskLevel.textContent = "Portfolio ready";
+    continueButtons.forEach(function (button) {
+      button.textContent = "Review completed tasks";
+      var arrow = document.createElement("span");
+      arrow.className = "btn__arrow";
+      arrow.setAttribute("aria-hidden", "true");
+      arrow.textContent = "→";
+      button.appendChild(arrow);
+    });
+  }
+
+  function matchesFilter(task) {
+    if (filter !== "all" && statuses[task.number] !== filter) {
+      return false;
+    }
+
+    if (!query) {
+      return true;
+    }
+
+    var haystack = (task.title + " " + task.description + " Task " + task.number).toLowerCase();
+    return haystack.indexOf(query) !== -1;
+  }
+
+  function makeButtonFocusable(number) {
+    var button = grid.querySelector('[data-number="' + number + '"] [data-toggle]');
+    if (button) {
+      button.focus();
+      return;
+    }
+    var activeChip = document.querySelector('[data-status-filter="' + filter + '"]');
+    if (activeChip) {
+      activeChip.focus();
+    }
+  }
+
+  function toggleStatus(number, source) {
+    var task = getTask(number);
+    if (!task) {
+      return;
+    }
+
+    if (statuses[number] === "completed") {
+      statuses[number] = "in-progress";
+      showToast("Task " + number + " reopened and marked in progress.");
+    } else {
+      statuses[number] = "completed";
+      showToast("Task " + number + " marked complete. " + getCompletedCount() + " of " + TOTAL_TASKS + " done.");
+    }
+
+    saveStatuses();
+    render();
+
+    if (source === "card") {
+      makeButtonFocusable(number);
+    }
+
+    if (dialog.open && activeTaskNumber === number) {
+      populateDialog(task);
+    }
+  }
+
+  function render() {
+    renderProgress();
+    renderProfile();
+
+    var visible = tasks.filter(matchesFilter);
+    grid.textContent = "";
+
+    visible.forEach(function (task) {
+      var card = template.content.firstElementChild.cloneNode(true);
+      var status = statuses[task.number];
+
+      card.setAttribute("data-number", String(task.number));
+      card.setAttribute("data-status", status);
+      card.querySelector('[data-field="number"]').textContent = "Task 0" + task.number;
+      card.querySelector('[data-field="title"]').textContent = task.title;
+      card.querySelector('[data-field="description"]').textContent = task.description;
+      card.querySelector('[data-field="day"]').textContent = "Introduced on Day " + task.day;
+      card.querySelector('[data-field="difficulty"]').textContent = task.difficulty;
+      card.querySelector('[data-field="view-label"]').textContent = task.title;
+      card.querySelector('[data-field="status-label"]').textContent = STATUS_LABELS[status];
+
+      var statusBadge = card.querySelector('[data-field="status"]');
+      setStatusClass(statusBadge, status);
+      setLevel(card.querySelector('[data-field="level"]'), task.level);
+
+      var toggle = card.querySelector("[data-toggle]");
+      toggle.textContent = status === "completed" ? "Reopen" : "Mark complete";
+      toggle.setAttribute("aria-label", (status === "completed" ? "Reopen " : "Mark complete: ") + task.title);
+      toggle.setAttribute("data-toggle-number", String(task.number));
+
+      card.querySelector("[data-view]").addEventListener("click", function (event) {
+        openTask(task.number, event.currentTarget);
+      });
+
+      toggle.addEventListener("click", function () {
+        toggleStatus(task.number, "card");
+      });
+
+      grid.appendChild(card);
+    });
+
+    grid.hidden = visible.length === 0;
+    emptyState.hidden = visible.length !== 0;
+    taskCount.innerHTML = "<strong>" + visible.length + "</strong> of " + TOTAL_TASKS + " tasks";
+
+    filterButtons.forEach(function (button) {
+      var isActive = button.getAttribute("data-status-filter") === filter;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+
+    var filtersAreDefault = filter === "all" && query === "";
+    filterReset.setAttribute("aria-disabled", String(filtersAreDefault));
+  }
+
+  function populateDialog(task) {
+    var status = statuses[task.number];
+
+    dialogStatusLabel.textContent = STATUS_LABELS[status];
+    setStatusClass(dialogStatus, status);
+    dialogDifficulty.textContent = task.difficulty;
+    setLevel(dialogLevel, task.level);
+    dialogTitle.textContent = task.title;
+    dialogDescription.textContent = task.description;
+    dialogNumber.textContent = "Task 0" + task.number;
+    dialogDay.textContent = "Day " + task.day;
+    dialogStatusText.textContent = STATUS_LABELS[status];
+
+    dialogFocus.textContent = "";
+    task.focus.forEach(function (item) {
+      var li = document.createElement("li");
+      li.textContent = item;
+      dialogFocus.appendChild(li);
+    });
+    dialogEvidence.textContent = task.evidence;
+
+    dialogAction.textContent = status === "completed" ? "Reopen task" : "Mark as completed";
+    dialogAction.setAttribute("data-number", String(task.number));
+  }
+
+  function openTask(number, trigger) {
+    var task = getTask(number);
+    if (!task) {
+      return;
+    }
+    activeTaskNumber = number;
+    opener = trigger || null;
+    populateDialog(task);
+    if (typeof dialog.showModal === "function") {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute("open", "");
+    }
+    document.body.classList.add("dialog-open");
+    dialogClose.focus();
+  }
+
+  function closeDialog() {
+    if (typeof dialog.close === "function") {
+      dialog.close();
+    } else {
+      dialog.removeAttribute("open");
+      document.body.classList.remove("dialog-open");
+      restoreFocus();
+    }
+  }
+
+  function restoreFocus() {
+    if (opener && document.documentElement.contains(opener)) {
+      opener.focus();
+      return;
+    }
+    if (activeTaskNumber !== null) {
+      var view = grid.querySelector('[data-number="' + activeTaskNumber + '"] [data-view]');
+      if (view) {
+        view.focus();
+        return;
+      }
+    }
+    var heading = document.getElementById("tasks-title");
+    if (heading) {
+      heading.setAttribute("tabindex", "-1");
+      heading.focus();
+    }
+  }
+
+  function resetFilters() {
+    filter = "all";
+    query = "";
+    if (searchInput) {
+      searchInput.value = "";
+    }
+    render();
+  }
+
+  filterButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      filter = button.getAttribute("data-status-filter");
+      render();
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      query = searchInput.value.trim().toLowerCase();
+      render();
+    });
+  }
+
+  if (filterReset) {
+    filterReset.addEventListener("click", function () {
+      if (filterReset.getAttribute("aria-disabled") === "true") {
+        return;
+      }
+      resetFilters();
+    });
+  }
+
+  if (emptyReset) {
+    emptyReset.addEventListener("click", function () {
+      resetFilters();
+      if (searchInput) {
+        searchInput.focus();
+      }
+    });
+  }
+
+  var resetButton = document.getElementById("progress-reset");
+  if (resetButton) {
+    resetButton.addEventListener("click", function () {
+      var shouldReset = window.confirm("Reset the demo progress for all eight tasks?");
+      if (!shouldReset) {
+        return;
+      }
+      statuses = createDefaultStatuses();
+      saveStatuses();
+      render();
+      showToast("Demo progress reset to the starting state.");
+    });
+  }
+
+  continueButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      var current = tasks.filter(function (task) {
+        return statuses[task.number] === "in-progress";
+      })[0];
+
+      if (!current) {
+        current = tasks.filter(function (task) {
+          return statuses[task.number] === "not-started";
+        })[0];
+      }
+
+      if (current) {
+        openTask(current.number, button);
+        return;
+      }
+
+      filter = "completed";
+      query = "";
+      if (searchInput) {
+        searchInput.value = "";
+      }
+      render();
+      var tasksSection = document.getElementById("tasks");
+      if (tasksSection) {
+        tasksSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      var activeChip = document.querySelector('[data-status-filter="completed"]');
+      if (activeChip) {
+        activeChip.focus();
+      }
+    });
+  });
+
+  dialogAction.addEventListener("click", function () {
+    if (activeTaskNumber !== null) {
+      toggleStatus(activeTaskNumber, "dialog");
+    }
+  });
+
+  dialogClose.addEventListener("click", closeDialog);
+  dialogDone.addEventListener("click", closeDialog);
+
+  dialog.addEventListener("close", function () {
+    document.body.classList.remove("dialog-open");
+    restoreFocus();
+    activeTaskNumber = null;
+    opener = null;
+  });
+
+  render();
+})();
+
+/* ============================================================
+   Modern Web Technologies explorer (Task 6)
+   Tabs update one panel with information and official links.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tech-tab"));
+  var panel = document.getElementById("tech-panel");
+  var panelBody = document.getElementById("tech-panel-body");
+
+  if (!tabs.length || !panel || !panelBody) {
+    return;
+  }
+
+  var technologies = {
+    nextjs: {
+      eyebrow: "React framework",
+      title: "Next.js",
+      summary: "Next.js is an open-source React framework for building full-stack web applications. It adds routing, rendering and data fetching on top of React, so a team can build the interface and the server side in one project.",
+      uses: [
+        "Marketing sites and content platforms that need fast loads and strong search visibility",
+        "Full-stack products with server-rendered pages, API routes or server actions",
+        "React applications that need file-based routing and built-in image optimisation"
+      ],
+      link: "https://nextjs.org/",
+      linkLabel: "Learn more at nextjs.org"
+    },
+    vue: {
+      eyebrow: "Progressive framework",
+      title: "Vue.js",
+      summary: "Vue.js is a progressive JavaScript framework for building user interfaces. It is known for an approachable API, reactive data and single-file components that keep markup, styles and logic together.",
+      uses: [
+        "Interactive dashboards and single-page applications",
+        "Adding interactivity to a page that is already mostly built",
+        "Teams that want a light framework with clear templates"
+      ],
+      link: "https://vuejs.org/",
+      linkLabel: "Learn more at vuejs.org"
+    },
+    angular: {
+      eyebrow: "TypeScript framework",
+      title: "Angular",
+      summary: "Angular is a TypeScript-based framework maintained by Google for building large, structured web applications. It includes routing, forms, dependency injection and testing tools in one platform.",
+      uses: [
+        "Enterprise single-page applications with many screens",
+        "Products with complex forms, shared state and strict structure",
+        "Teams that prefer a full framework with built-in tooling"
+      ],
+      link: "https://angular.dev/",
+      linkLabel: "Learn more at angular.dev"
+    },
+    backend: {
+      eyebrow: "Server side",
+      title: "Backend development",
+      summary: "Backend development is the server-side part of a web application. It handles data storage, authentication, business rules and the APIs that the frontend calls. The frontend sends a request, the backend validates it, talks to a database and returns a response, usually as JSON.",
+      technologies: [
+        {
+          name: "Node.js",
+          summary: "A JavaScript runtime that runs server code outside the browser. Often used for APIs, real-time features and build tooling.",
+          link: "https://nodejs.org/"
+        },
+        {
+          name: "Express.js",
+          summary: "A small Node.js web framework for routing and HTTP middleware. Often used to build REST APIs.",
+          link: "https://expressjs.com/"
+        },
+        {
+          name: "Django",
+          summary: "A batteries-included Python framework with an admin panel, ORM and authentication. Often used for data-driven sites.",
+          link: "https://www.djangoproject.com/"
+        },
+        {
+          name: "Flask",
+          summary: "A lightweight Python framework for small services and APIs. Often chosen when a team wants control over the stack.",
+          link: "https://flask.palletsprojects.com/"
+        },
+        {
+          name: "Laravel",
+          summary: "A PHP framework with routing, database tools and a large ecosystem. Often used for business applications.",
+          link: "https://laravel.com/"
+        },
+        {
+          name: ".NET",
+          summary: "A Microsoft platform for building web, desktop and cloud applications with C# and related languages.",
+          link: "https://dotnet.microsoft.com/"
+        }
+      ],
+      link: "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/First_steps/Introduction",
+      linkLabel: "Read an introduction to the server side"
+    }
+  };
+
+  function renderTech(id) {
+    var tech = technologies[id];
+    if (!tech) {
+      return;
+    }
+
+    var html = '<p class="tech-panel__eyebrow">' + tech.eyebrow + "</p>" +
+      "<h3>" + tech.title + "</h3>" +
+      "<p>" + tech.summary + "</p>";
+
+    if (tech.technologies) {
+      html += "<h4>Backend technologies to know</h4><div class=\"tech-backend-grid\">";
+      tech.technologies.forEach(function (item) {
+        html += '<article class="tech-backend-card">' +
+          "<h4>" + item.name + "</h4>" +
+          "<p>" + item.summary + "</p>" +
+          '<a href="' + item.link + '" target="_blank" rel="noopener noreferrer">Official site' +
+          '<span class="sr-only"> for ' + item.name + " (opens in a new tab)</span>" +
+          "<span aria-hidden=\"true\"> →</span></a>" +
+          "</article>";
+      });
+      html += "</div>";
+      html += '<p class="tech-connection"><strong>How it connects to the frontend.</strong> The frontend sends requests to the backend over HTTPS. The backend checks the request, reads or writes data, applies the business rules and returns a response. Keeping the two layers separate lets each side change without breaking the other.</p>';
+    } else {
+      html += "<h4>Common uses</h4><ul class=\"tech-uses\">";
+      tech.uses.forEach(function (use) {
+        html += "<li>" + use + "</li>";
+      });
+      html += "</ul>";
+      html += '<a class="tech-link" href="' + tech.link + '" target="_blank" rel="noopener noreferrer">' +
+        tech.linkLabel +
+        '<span class="sr-only"> (opens in a new tab)</span>' +
+        "<span aria-hidden=\"true\"> →</span></a>";
+    }
+
+    panelBody.innerHTML = html;
+    panel.setAttribute("aria-labelledby", "tech-tab-" + id);
+
+    tabs.forEach(function (tab) {
+      var isActive = tab.getAttribute("data-tech") === id;
+      tab.classList.toggle("is-active", isActive);
+      tab.setAttribute("aria-selected", String(isActive));
+      tab.setAttribute("tabindex", isActive ? "0" : "-1");
+    });
+  }
+
+  function activateTab(tab, moveFocus) {
+    renderTech(tab.getAttribute("data-tech"));
+    if (moveFocus) {
+      tab.focus();
+    }
+  }
+
+  tabs.forEach(function (tab, index) {
+    tab.addEventListener("click", function () {
+      activateTab(tab, false);
+    });
+
+    tab.addEventListener("keydown", function (event) {
+      var nextIndex = null;
+
+      if (event.key === "ArrowRight") {
+        nextIndex = (index + 1) % tabs.length;
+      } else if (event.key === "ArrowLeft") {
+        nextIndex = (index - 1 + tabs.length) % tabs.length;
+      } else if (event.key === "Home") {
+        nextIndex = 0;
+      } else if (event.key === "End") {
+        nextIndex = tabs.length - 1;
+      }
+
+      if (nextIndex !== null) {
+        event.preventDefault();
+        activateTab(tabs[nextIndex], true);
+      }
+    });
+  });
+
+  renderTech("nextjs");
+})();

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intern Dashboard - TechBridge</title>
+  <meta name="description" content="Track your TechBridge internship progress, move through all eight tasks, filter the task tracker, open task details and explore modern web technologies.">
+  <meta name="theme-color" content="#f4f2ee">
+  <link rel="icon" href="images/techbridge-logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <a class="brand__link" href="index.html" aria-label="TechBridge home">
+          <img src="images/techbridge-logo.png" alt="TechBridge" width="578" height="115">
+        </a>
+        <p class="brand__tagline">Bridging Learning to Real-World Experience</p>
+      </div>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+        <span class="nav-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="nav-toggle__text" aria-hidden="true">Menu</span>
+      </button>
+
+      <nav class="site-nav" id="primary-nav" aria-label="Primary">
+        <ul class="nav-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="programs.html">Programs</a></li>
+          <li><a href="index.html#internship">Internship</a></li>
+          <li><a href="tasks.html">Tasks</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="challenges.html">Challenges</a></li>
+          <li><a href="dashboard.html" class="is-active" aria-current="page">Dashboard</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+        <a class="btn btn--primary btn--sm nav-cta" href="https://forms.gle/8EbdSy5ttGfLZfjv5" target="_blank" rel="noopener noreferrer">
+          Apply Now
+          <span class="btn__arrow" aria-hidden="true">→</span>
+          <span class="sr-only">(opens the official application form in a new tab)</span>
+        </a>
+      </nav>
+
+      <a class="btn btn--primary btn--sm header-cta" href="https://forms.gle/8EbdSy5ttGfLZfjv5" target="_blank" rel="noopener noreferrer">
+        Apply Now
+        <span class="btn__arrow" aria-hidden="true">→</span>
+        <span class="sr-only">(opens the official application form in a new tab)</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="nav-backdrop" aria-hidden="true"></div>
+
+  <main id="main">
+    <!-- Welcome -->
+    <section class="dash-hero" aria-labelledby="dashboard-title">
+      <div class="container dash-hero__grid">
+        <div class="dash-hero__copy">
+          <span class="pill">Intern dashboard</span>
+          <h1 id="dashboard-title">Welcome back, <br><em>Alex</em>.</h1>
+          <p class="dash-hero__role">Web Development Intern</p>
+          <p class="dash-hero__status">
+            <span class="dash-status-dot" aria-hidden="true"></span>
+            Internship status: <strong id="internship-status">In progress</strong>
+          </p>
+          <p class="dash-hero__lede">You are building the TechBridge platform one task at a time. Review where you are, open the next brief and keep your momentum going.</p>
+          <div class="dash-hero__actions">
+            <button class="btn btn--primary" id="continue-task" type="button" data-continue>
+              Continue current task
+              <span class="btn__arrow" aria-hidden="true">→</span>
+            </button>
+            <a class="btn btn--ghost" href="#tasks">
+              See all tasks
+              <span class="btn__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+          <p class="dash-hero__note">
+            <span class="dash-hero__note-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 11v5M12 7.6v.01"/>
+              </svg>
+            </span>
+            This is a sample intern profile with demo progress saved in your browser. It is not an official internship record.
+          </p>
+        </div>
+
+        <aside class="dash-profile" aria-labelledby="current-task-label">
+          <div class="dash-profile__head">
+            <span class="dash-avatar" aria-hidden="true">AM</span>
+            <div>
+              <p class="dash-profile__name">Alex Morgan</p>
+              <p class="dash-profile__track">Web Development</p>
+            </div>
+            <span class="dash-profile__chip">Sample</span>
+          </div>
+
+          <div class="dash-profile__task">
+            <p class="dash-profile__label" id="current-task-label">Current task</p>
+            <h2 id="current-task-title">Build the Task Submission System</h2>
+            <p class="dash-profile__meta">
+              <span id="current-task-number">Task 06</span>
+              <span aria-hidden="true">·</span>
+              <span id="current-task-day">Day 19</span>
+              <span aria-hidden="true">·</span>
+              <span id="current-task-level">Intermediate</span>
+            </p>
+          </div>
+
+          <div class="dash-profile__progress">
+            <div>
+              <span>Program progress</span>
+              <strong id="profile-percent">62.5%</strong>
+            </div>
+            <span class="dash-profile__bar" aria-hidden="true"><i id="profile-bar" style="width: 62.5%"></i></span>
+          </div>
+
+          <button class="btn btn--cream btn--sm dash-profile__button" type="button" data-continue>
+            Continue task
+            <span class="btn__arrow" aria-hidden="true">→</span>
+          </button>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Progress -->
+    <section class="dash-progress-section" aria-labelledby="progress-title">
+      <div class="container">
+        <div class="dash-progress" id="progress-card">
+          <div class="dash-progress__head">
+            <div>
+              <p class="dash-eyebrow">Internship progress</p>
+              <h2 id="progress-title">Your 30-day build, at a glance.</h2>
+            </div>
+            <p class="dash-progress__message" id="progress-message">3 tasks remaining</p>
+          </div>
+
+          <div class="dash-progress__grid">
+            <div class="dash-progress__big">
+              <p><strong id="progress-completed">5</strong><span>/ 8</span></p>
+              <p>Tasks completed</p>
+            </div>
+            <dl class="dash-progress__stats">
+              <div>
+                <dt>Total tasks</dt>
+                <dd>8</dd>
+              </div>
+              <div>
+                <dt>Completed</dt>
+                <dd id="stat-completed">5</dd>
+              </div>
+              <div>
+                <dt>Remaining</dt>
+                <dd id="stat-remaining">3</dd>
+              </div>
+              <div>
+                <dt>Progress</dt>
+                <dd id="stat-percent">62.5%</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="dash-bar">
+            <div class="dash-bar__track" id="dashboard-progress-bar" role="progressbar" aria-labelledby="progress-title" aria-valuemin="0" aria-valuemax="8" aria-valuenow="5" aria-valuetext="5 of 8 tasks completed">
+              <span class="dash-bar__fill" id="dashboard-progress-fill" style="width: 62.5%"></span>
+            </div>
+            <div class="dash-bar__labels">
+              <span id="bar-label">5 of 8 tasks completed</span>
+              <strong id="progress-percent">62.5%</strong>
+            </div>
+          </div>
+
+          <div class="dash-complete-banner" id="all-complete" hidden>
+            <span class="dash-complete-banner__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="m5 12.5 4.2 4.2L19 6.8"/>
+              </svg>
+            </span>
+            <p><strong>All eight tasks complete.</strong> You have finished the full TechBridge build. Take a moment to review the work in your portfolio.</p>
+          </div>
+
+          <div class="dash-progress__foot">
+            <p>Progress is saved in this browser only.</p>
+            <button class="dash-reset" id="progress-reset" type="button">Reset demo progress</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Task tracker -->
+    <section class="dash-tasks" id="tasks" aria-labelledby="tasks-title">
+      <div class="container">
+        <div class="dash-head">
+          <div>
+            <p class="dash-eyebrow">The task tracker</p>
+            <h2 id="tasks-title">Eight tasks, one clear path.</h2>
+          </div>
+          <p class="dash-head__intro">Filter by status or search by keyword. Every card opens a short brief without leaving the dashboard.</p>
+        </div>
+
+        <div class="dash-controls">
+          <div class="dash-search">
+            <label class="dash-label" for="task-search">Search tasks</label>
+            <div class="dash-search__field">
+              <span class="dash-search__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" focusable="false">
+                  <circle cx="10.5" cy="10.5" r="6.5"/>
+                  <path d="m15.4 15.4 4.1 4.1"/>
+                </svg>
+              </span>
+              <input id="task-search" type="search" placeholder="Try dashboard, CSS or data" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="dash-filters">
+            <span class="dash-label" id="status-filter-label">Status</span>
+            <div class="dash-filter-chips" role="group" aria-labelledby="status-filter-label">
+              <button class="filter-chip is-active" type="button" data-status-filter="all" aria-pressed="true">
+                All <span class="chip-count" id="count-all">8</span>
+              </button>
+              <button class="filter-chip" type="button" data-status-filter="completed" aria-pressed="false">
+                Completed <span class="chip-count" id="count-completed">5</span>
+              </button>
+              <button class="filter-chip" type="button" data-status-filter="in-progress" aria-pressed="false">
+                In Progress <span class="chip-count" id="count-in-progress">1</span>
+              </button>
+              <button class="filter-chip" type="button" data-status-filter="not-started" aria-pressed="false">
+                Not Started <span class="chip-count" id="count-not-started">2</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-status-bar">
+          <p class="dash-count" id="task-count" role="status" aria-live="polite"><strong>8</strong> of 8 tasks</p>
+          <button class="dash-reset" id="filter-reset" type="button" aria-disabled="true">Reset filters</button>
+        </div>
+
+        <div class="dash-task-grid" id="task-grid"></div>
+
+        <div class="dash-empty" id="task-empty" hidden>
+          <span class="dash-empty__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" focusable="false">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.4 15.4 4.1 4.1M8 10.5h5"/>
+            </svg>
+          </span>
+          <h3>No tasks match this view.</h3>
+          <p>Try a different status or clear the search to see all eight tasks again.</p>
+          <button class="btn btn--ghost btn--sm" id="empty-reset" type="button">Show all tasks</button>
+        </div>
+
+        <noscript>
+          <p class="dash-noscript">The interactive task tracker needs JavaScript. You can still read every internship task on the <a href="tasks.html">Tasks page</a>.</p>
+        </noscript>
+      </div>
+    </section>
+
+    <!-- Challenge Hub link -->
+    <section class="dash-challenges" aria-labelledby="dashboard-challenges-title">
+      <div class="container">
+        <div class="dash-challenge-card">
+          <div class="dash-challenge-card__copy">
+            <p class="dash-eyebrow dash-eyebrow--light">From progress to practice</p>
+            <h2 id="dashboard-challenges-title">Ready for a new challenge?</h2>
+            <p>The Challenge Hub holds eight original practice activities across Data Analytics and Web Development. Use one when you want to sharpen a skill between tasks.</p>
+            <a class="btn btn--cream" href="challenges.html">
+              Explore challenges
+              <span class="btn__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+          <div class="dash-challenge-card__preview">
+            <p class="dash-preview__label">Challenge Hub</p>
+            <p class="dash-preview__count"><strong>8</strong> practice challenges</p>
+            <ul class="dash-preview__tags">
+              <li>2 tracks</li>
+              <li>3 difficulty levels</li>
+              <li>Self-contained briefs</li>
+            </ul>
+            <p class="dash-preview__note">Filter by track and difficulty, then open any challenge for the full brief.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modern web technologies -->
+    <section class="dash-tech" id="technology" aria-labelledby="tech-title">
+      <div class="container">
+        <div class="dash-head">
+          <div>
+            <p class="dash-eyebrow">Modern web technologies</p>
+            <h2 id="tech-title">What happens beyond HTML, CSS and JavaScript?</h2>
+          </div>
+          <p class="dash-head__intro">A quick tour of the frameworks and backend tools used to build larger web platforms. Choose a topic to change the panel.</p>
+        </div>
+
+        <div class="tech-explorer">
+          <div class="tech-tabs" role="tablist" aria-label="Choose a technology">
+            <button class="tech-tab is-active" id="tech-tab-nextjs" type="button" role="tab" aria-selected="true" aria-controls="tech-panel" tabindex="0" data-tech="nextjs">Next.js</button>
+            <button class="tech-tab" id="tech-tab-vue" type="button" role="tab" aria-selected="false" aria-controls="tech-panel" tabindex="-1" data-tech="vue">Vue.js</button>
+            <button class="tech-tab" id="tech-tab-angular" type="button" role="tab" aria-selected="false" aria-controls="tech-panel" tabindex="-1" data-tech="angular">Angular</button>
+            <button class="tech-tab" id="tech-tab-backend" type="button" role="tab" aria-selected="false" aria-controls="tech-panel" tabindex="-1" data-tech="backend">Backend</button>
+          </div>
+
+          <div class="tech-panel" id="tech-panel" role="tabpanel" aria-labelledby="tech-tab-nextjs" tabindex="0">
+            <div id="tech-panel-body">
+              <p class="tech-panel__eyebrow">React framework</p>
+              <h3>Next.js</h3>
+              <p>Next.js is an open-source React framework for building full-stack web applications. It adds routing, rendering and data fetching on top of React, so a team can build the interface and the server side in one project.</p>
+              <h4>Common uses</h4>
+              <ul class="tech-uses">
+                <li>Marketing sites and content platforms that need fast loads and strong search visibility</li>
+                <li>Full-stack products with server-rendered pages, API routes or server actions</li>
+                <li>React applications that need file-based routing and built-in image optimisation</li>
+              </ul>
+              <a class="tech-link" href="https://nextjs.org/" target="_blank" rel="noopener noreferrer">
+                Learn more at nextjs.org
+                <span class="sr-only">(opens in a new tab)</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="footer-logo" href="index.html" aria-label="TechBridge home">
+            <img src="images/techbridge-logo.png" alt="TechBridge" width="578" height="115">
+          </a>
+          <p class="footer-org">TechBridge by Baselink Services Limited</p>
+          <p class="footer-tagline">Bridging Learning to Real-World Experience</p>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer">
+          <h2 class="footer-heading">Quick Links</h2>
+          <div class="footer-links">
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="index.html#about">About</a></li>
+              <li><a href="programs.html">Programs</a></li>
+              <li><a href="index.html#internship">Internship</a></li>
+            </ul>
+            <ul>
+              <li><a href="tasks.html">Tasks</a></li>
+              <li><a href="roadmap.html">Roadmap</a></li>
+              <li><a href="challenges.html">Challenges</a></li>
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="footer-contact">
+          <h2 class="footer-heading">Contact</h2>
+          <ul>
+            <li>
+              <a href="mailto:techbridgebaslink@gmail.com">
+                <svg class="contact-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                  <rect x="2.5" y="5" width="19" height="14" rx="2.5" stroke="currentColor" stroke-width="1.7"/>
+                  <path d="m3.5 6.5 8.5 6.5 8.5-6.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                techbridgebaslink@gmail.com
+              </a>
+            </li>
+          </ul>
+          <div class="social-row">
+            <a class="social-btn" href="https://www.linkedin.com/company/techbridge-services/" target="_blank" rel="noopener noreferrer" aria-label="TechBridge on LinkedIn (opens in a new tab)">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M4.98 3.5a2.5 2.5 0 1 1-.02 5 2.5 2.5 0 0 1 .02-5ZM3 9.2h4V21H3V9.2Zm6.6 0h3.8v1.6h.1c.53-1 1.83-2.06 3.75-2.06 4.01 0 4.75 2.64 4.75 6.07V21h-4v-5.35c0-1.28-.02-2.92-1.78-2.92-1.78 0-2.06 1.39-2.06 2.83V21h-4V9.2h-.56Z"/>
+              </svg>
+            </a>
+            <a class="social-btn" href="https://www.instagram.com/techbridgeserves" target="_blank" rel="noopener noreferrer" aria-label="TechBridge on Instagram (opens in a new tab)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false">
+                <rect x="3" y="3" width="18" height="18" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+            <a class="social-btn" href="https://www.facebook.com/p/Baselink-Services-100066771475783/" target="_blank" rel="noopener noreferrer" aria-label="TechBridge on Facebook (opens in a new tab)">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M13.5 21.5v-6.9h2.32l.44-2.86H13.5V9.87c0-.83.23-1.39 1.42-1.39h1.44V5.94c-.25-.03-1.1-.1-2.1-.1-2.08 0-3.5 1.27-3.5 3.6v2.3H8.4v2.86h2.36v6.9h2.74Z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 TechBridge by Baselink Services Limited. All rights reserved.</p>
+        <p class="footer-motto">Learn. Build. Grow.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="dash-toast" id="dashboard-toast" role="status" aria-live="polite"></div>
+
+  <template id="dash-task-template">
+    <article class="dash-task" data-status="not-started">
+      <div class="dash-task__top">
+        <span class="dash-task__number" data-field="number">Task 01</span>
+        <span class="dash-status" data-field="status">
+          <span class="dash-status__dot" aria-hidden="true"></span>
+          <span data-field="status-label">Not started</span>
+        </span>
+      </div>
+      <h3 data-field="title"></h3>
+      <p class="dash-task__description" data-field="description"></p>
+      <ul class="dash-task__meta">
+        <li><span data-field="day"></span></li>
+        <li>
+          <span class="level" data-field="level">
+            <span class="level__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span data-field="difficulty"></span>
+          </span>
+        </li>
+      </ul>
+      <div class="dash-task__actions">
+        <button class="btn btn--ghost btn--sm" type="button" data-view>
+          View task
+          <span class="btn__arrow" aria-hidden="true">→</span>
+          <span class="sr-only" data-field="view-label"></span>
+        </button>
+        <button class="dash-task__toggle" type="button" data-toggle>
+          Mark complete
+          <span class="sr-only" data-field="toggle-label"></span>
+        </button>
+      </div>
+    </article>
+  </template>
+
+  <dialog class="dash-dialog" id="task-dialog" aria-labelledby="task-dialog-title">
+    <div class="dash-dialog__panel">
+      <div class="dash-dialog__head">
+        <div class="dash-dialog__badges">
+          <span class="dash-status" id="task-dialog-status">
+            <span class="dash-status__dot" aria-hidden="true"></span>
+            <span id="task-dialog-status-label">In progress</span>
+          </span>
+          <span class="level" id="task-dialog-level">
+            <span class="level__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span id="task-dialog-difficulty"></span>
+          </span>
+        </div>
+        <button class="dash-dialog__close" id="task-dialog-close" type="button" aria-label="Close task details">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" focusable="false" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="dash-dialog__scroll" tabindex="0" role="region" aria-label="Task details">
+        <p class="dash-dialog__eyebrow">Internship task</p>
+        <h2 id="task-dialog-title"></h2>
+        <p class="dash-dialog__summary" id="task-dialog-description"></p>
+
+        <dl class="dash-dialog__meta">
+          <div>
+            <dt>Task</dt>
+            <dd id="task-dialog-number"></dd>
+          </div>
+          <div>
+            <dt>Introduced</dt>
+            <dd id="task-dialog-day"></dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd id="task-dialog-status-text"></dd>
+          </div>
+        </dl>
+
+        <div class="dash-dialog__section">
+          <h3>What this task covers</h3>
+          <ul class="dash-dialog__focus" id="task-dialog-focus"></ul>
+        </div>
+
+        <div class="dash-dialog__section">
+          <h3>Suggested evidence</h3>
+          <p id="task-dialog-evidence"></p>
+        </div>
+
+        <p class="dash-dialog__note">Task titles and descriptions come from the TechBridge internship task list. This dashboard uses a sample intern profile and demo progress, so the status shown here is not an official record.</p>
+      </div>
+
+      <div class="dash-dialog__foot">
+        <button class="btn btn--primary btn--sm" id="task-dialog-action" type="button">Mark as completed</button>
+        <button class="btn btn--ghost btn--sm" id="task-dialog-done" type="button">Close</button>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>
