@@ -2092,7 +2092,7 @@
           "</article>";
       });
       html += "</div>";
-      html += '<p class="tech-connection"><strong>How it connects to the frontend.</strong> The frontend sends requests to the backend over HTTPS. The backend checks the request, reads or writes data, applies the business rules and returns a response. Keeping the two layers separate lets each side change without breaking the other.</p>';
+      html += '<div class="tech-connection"><p><strong>How it connects to the frontend.</strong> The frontend sends requests to the backend over HTTPS. The backend checks the request, reads or writes data, applies the business rules and returns a response. Keeping the two layers separate lets each side change without breaking the other.</p></div>';
     } else {
       html += "<h4>Common uses</h4><ul class=\"tech-uses\">";
       tech.uses.forEach(function (use) {

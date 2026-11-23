@@ -6374,6 +6374,14 @@ body.dialog-open {
   line-height: 1.65;
 }
 
+.tech-connection p {
+  max-width: 74ch;
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .tech-connection strong {
   color: var(--navy);
   font-weight: 800;
