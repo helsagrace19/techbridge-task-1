@@ -11,6 +11,34 @@ function send(res, status, body) {
   res.end(JSON.stringify(body));
 }
 
+/* Vercel's standalone Node runtime does not always populate req.query
+   for a catch-all route, so fall back to the request URL. */
+function pathSegments(req) {
+  const raw = req.query && req.query.path;
+  if (Array.isArray(raw) && raw.length) {
+    return raw.map(String);
+  }
+  if (typeof raw === "string" && raw) {
+    return [raw];
+  }
+
+  const rawUrl = req.url || "";
+  const queryIndex = rawUrl.indexOf("?");
+  const pathname = queryIndex === -1 ? rawUrl : rawUrl.slice(0, queryIndex);
+  const parts = pathname.split("/").filter(Boolean).map((part) => {
+    try {
+      return decodeURIComponent(part);
+    } catch (error) {
+      return part;
+    }
+  });
+
+  if (parts[0] === "api") {
+    parts.shift();
+  }
+  return parts;
+}
+
 async function readJson(req) {
   if (req.body !== undefined && req.body !== null) {
     if (Buffer.isBuffer(req.body)) {
@@ -41,8 +69,7 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const raw = req.query && req.query.path;
-  const segments = Array.isArray(raw) ? raw : raw ? [raw] : [];
+  const segments = pathSegments(req);
 
   if (segments[0] === "health" && segments.length === 1) {
     if (req.method !== "GET") {
