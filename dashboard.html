@@ -67,13 +67,19 @@
           <span class="pill">Intern dashboard</span>
           <h1 id="dashboard-title">Welcome back, <br><em>Alex</em>.</h1>
           <p class="dash-hero__role">Web Development Intern</p>
-          <p class="dash-hero__status">
-            <span class="dash-status-dot" aria-hidden="true"></span>
-            Internship status: <strong id="internship-status">In progress</strong>
-          </p>
+          <div class="dash-hero__badges">
+            <p class="dash-hero__status">
+              <span class="dash-status-dot" aria-hidden="true"></span>
+              Internship status: <strong id="internship-status">Loading</strong>
+            </p>
+            <p class="dash-api" id="api-status" data-state="connecting" role="status" aria-live="polite">
+              <span class="dash-api__dot" aria-hidden="true"></span>
+              Backend status: <strong id="api-status-label">Connecting</strong>
+            </p>
+          </div>
           <p class="dash-hero__lede">You are building the TechBridge platform one task at a time. Review where you are, open the next brief and keep your momentum going.</p>
           <div class="dash-hero__actions">
-            <button class="btn btn--primary" id="continue-task" type="button" data-continue>
+            <button class="btn btn--primary" id="continue-task" type="button" data-continue disabled>
               Continue current task
               <span class="btn__arrow" aria-hidden="true">→</span>
             </button>
@@ -89,7 +95,7 @@
                 <path d="M12 11v5M12 7.6v.01"/>
               </svg>
             </span>
-            This is a sample intern profile with demo progress saved in your browser. It is not an official internship record.
+            Task data and statuses are served by the TechBridge Task API. The intern profile is sample data, so this is not an official internship record.
           </p>
         </div>
 
@@ -105,25 +111,25 @@
 
           <div class="dash-profile__task">
             <p class="dash-profile__label" id="current-task-label">Current task</p>
-            <h2 id="current-task-title">Build the Task Submission System</h2>
+            <h2 id="current-task-title">Loading tasks...</h2>
             <p class="dash-profile__meta">
-              <span id="current-task-number">Task 06</span>
+              <span id="current-task-number">Task --</span>
               <span aria-hidden="true">·</span>
-              <span id="current-task-day">Day 19</span>
+              <span id="current-task-day">Day --</span>
               <span aria-hidden="true">·</span>
-              <span id="current-task-level">Intermediate</span>
+              <span id="current-task-level">Connecting</span>
             </p>
           </div>
 
           <div class="dash-profile__progress">
             <div>
               <span>Program progress</span>
-              <strong id="profile-percent">62.5%</strong>
+              <strong id="profile-percent">--</strong>
             </div>
-            <span class="dash-profile__bar" aria-hidden="true"><i id="profile-bar" style="width: 62.5%"></i></span>
+            <span class="dash-profile__bar" aria-hidden="true"><i id="profile-bar" style="width: 0%"></i></span>
           </div>
 
-          <button class="btn btn--cream btn--sm dash-profile__button" type="button" data-continue>
+          <button class="btn btn--cream btn--sm dash-profile__button" type="button" data-continue disabled>
             Continue task
             <span class="btn__arrow" aria-hidden="true">→</span>
           </button>
@@ -140,41 +146,41 @@
               <p class="dash-eyebrow">Internship progress</p>
               <h2 id="progress-title">Your 30-day build, at a glance.</h2>
             </div>
-            <p class="dash-progress__message" id="progress-message">3 tasks remaining</p>
+            <p class="dash-progress__message" id="progress-message">Loading tasks</p>
           </div>
 
           <div class="dash-progress__grid">
             <div class="dash-progress__big">
-              <p><strong id="progress-completed">5</strong><span>/ 8</span></p>
+              <p><strong id="progress-completed">--</strong><span id="progress-total">/ 8</span></p>
               <p>Tasks completed</p>
             </div>
             <dl class="dash-progress__stats">
               <div>
                 <dt>Total tasks</dt>
-                <dd>8</dd>
+                <dd id="stat-total">--</dd>
               </div>
               <div>
                 <dt>Completed</dt>
-                <dd id="stat-completed">5</dd>
+                <dd id="stat-completed">--</dd>
               </div>
               <div>
                 <dt>Remaining</dt>
-                <dd id="stat-remaining">3</dd>
+                <dd id="stat-remaining">--</dd>
               </div>
               <div>
                 <dt>Progress</dt>
-                <dd id="stat-percent">62.5%</dd>
+                <dd id="stat-percent">--</dd>
               </div>
             </dl>
           </div>
 
           <div class="dash-bar">
-            <div class="dash-bar__track" id="dashboard-progress-bar" role="progressbar" aria-labelledby="progress-title" aria-valuemin="0" aria-valuemax="8" aria-valuenow="5" aria-valuetext="5 of 8 tasks completed">
-              <span class="dash-bar__fill" id="dashboard-progress-fill" style="width: 62.5%"></span>
+            <div class="dash-bar__track" id="dashboard-progress-bar" role="progressbar" aria-labelledby="progress-title" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" aria-valuetext="Loading tasks">
+              <span class="dash-bar__fill" id="dashboard-progress-fill" style="width: 0%"></span>
             </div>
             <div class="dash-bar__labels">
-              <span id="bar-label">5 of 8 tasks completed</span>
-              <strong id="progress-percent">62.5%</strong>
+              <span id="bar-label">Waiting for task data</span>
+              <strong id="progress-percent">--</strong>
             </div>
           </div>
 
@@ -188,8 +194,8 @@
           </div>
 
           <div class="dash-progress__foot">
-            <p>Progress is saved in this browser only.</p>
-            <button class="dash-reset" id="progress-reset" type="button">Reset demo progress</button>
+            <p>Progress is saved by the TechBridge Task API.</p>
+            <button class="dash-reset" id="tasks-refresh" type="button">Refresh tasks</button>
           </div>
         </div>
       </div>
@@ -203,7 +209,7 @@
             <p class="dash-eyebrow">The task tracker</p>
             <h2 id="tasks-title">Eight tasks, one clear path.</h2>
           </div>
-          <p class="dash-head__intro">Filter by status or search by keyword. Every card opens a short brief without leaving the dashboard.</p>
+          <p class="dash-head__intro">Filter by status or search by keyword. Every card is loaded from the Task API, and each one opens a short brief without leaving the dashboard.</p>
         </div>
 
         <div class="dash-controls">
@@ -224,27 +230,45 @@
             <span class="dash-label" id="status-filter-label">Status</span>
             <div class="dash-filter-chips" role="group" aria-labelledby="status-filter-label">
               <button class="filter-chip is-active" type="button" data-status-filter="all" aria-pressed="true">
-                All <span class="chip-count" id="count-all">8</span>
+                All <span class="chip-count" id="count-all">--</span>
               </button>
               <button class="filter-chip" type="button" data-status-filter="completed" aria-pressed="false">
-                Completed <span class="chip-count" id="count-completed">5</span>
+                Completed <span class="chip-count" id="count-completed">--</span>
               </button>
               <button class="filter-chip" type="button" data-status-filter="in-progress" aria-pressed="false">
-                In Progress <span class="chip-count" id="count-in-progress">1</span>
+                In Progress <span class="chip-count" id="count-in-progress">--</span>
               </button>
               <button class="filter-chip" type="button" data-status-filter="not-started" aria-pressed="false">
-                Not Started <span class="chip-count" id="count-not-started">2</span>
+                Not Started <span class="chip-count" id="count-not-started">--</span>
               </button>
             </div>
           </div>
         </div>
 
         <div class="dash-status-bar">
-          <p class="dash-count" id="task-count" role="status" aria-live="polite"><strong>8</strong> of 8 tasks</p>
+          <p class="dash-count" id="task-count" role="status" aria-live="polite">Loading tasks</p>
           <button class="dash-reset" id="filter-reset" type="button" aria-disabled="true">Reset filters</button>
         </div>
 
-        <div class="dash-task-grid" id="task-grid"></div>
+        <div class="dash-loading" id="task-loading" role="status" aria-live="polite">
+          <span class="dash-spinner" aria-hidden="true"></span>
+          <div>
+            <strong>Loading tasks...</strong>
+            <p>Fetching the latest task data from the backend API.</p>
+          </div>
+        </div>
+
+        <div class="dash-error" id="task-error" role="alert" hidden>
+          <span class="dash-error__icon" aria-hidden="true">!</span>
+          <div class="dash-error__copy">
+            <h3>Unable to load tasks.</h3>
+            <p>Please check your connection or try again.</p>
+            <p class="dash-error__detail" id="task-error-detail" hidden></p>
+          </div>
+          <button class="btn btn--primary btn--sm" id="task-error-retry" type="button">Try again</button>
+        </div>
+
+        <div class="dash-task-grid" id="task-grid" hidden></div>
 
         <div class="dash-empty" id="task-empty" hidden>
           <span class="dash-empty__icon" aria-hidden="true">
@@ -259,8 +283,47 @@
         </div>
 
         <noscript>
-          <p class="dash-noscript">The interactive task tracker needs JavaScript. You can still read every internship task on the <a href="tasks.html">Tasks page</a>.</p>
+          <p class="dash-noscript">The interactive task tracker needs JavaScript and the TechBridge Task API. You can still read every internship task on the <a href="tasks.html">Tasks page</a>.</p>
         </noscript>
+      </div>
+    </section>
+
+    <!-- API documentation -->
+    <section class="dash-api-section" id="api-docs" aria-labelledby="api-title">
+      <div class="container">
+        <div class="dash-head">
+          <div>
+            <p class="dash-eyebrow">Under the hood</p>
+            <h2 id="api-title">The API behind this dashboard.</h2>
+          </div>
+          <p class="dash-head__intro">Task 7 adds a Node.js and Express API. The dashboard fetches its task data from these endpoints instead of storing it in the page.</p>
+        </div>
+
+        <div class="api-grid">
+          <article class="api-card">
+            <div class="api-card__top">
+              <span class="api-method">GET</span>
+              <code>/api/tasks</code>
+            </div>
+            <p>Returns all eight internship tasks and their current statuses.</p>
+          </article>
+          <article class="api-card">
+            <div class="api-card__top">
+              <span class="api-method">GET</span>
+              <code>/api/tasks/:id</code>
+            </div>
+            <p>Returns one task for the detail dialog without reloading the page.</p>
+          </article>
+          <article class="api-card">
+            <div class="api-card__top">
+              <span class="api-method api-method--put">PUT</span>
+              <code>/api/tasks/:id</code>
+            </div>
+            <p>Updates a task status and returns the saved task to the dashboard.</p>
+          </article>
+        </div>
+
+        <p class="api-foot">The Express server lives in <code>backend/server.js</code>, with the task data in <code>backend/data/tasks.json</code>. The live deployment exposes the same routes through <code>api/[...path].js</code>. <a href="https://github.com/helsagrace19/techbridge-task-1/blob/main/backend/server.js" target="_blank" rel="noopener noreferrer">View the server code<span class="sr-only"> (opens in a new tab)</span></a>.</p>
       </div>
     </section>
 
@@ -441,10 +504,10 @@
     </article>
   </template>
 
-  <dialog class="dash-dialog" id="task-dialog" aria-labelledby="task-dialog-title">
+  <dialog class="dash-dialog" id="task-dialog" aria-label="Task details">
     <div class="dash-dialog__panel">
       <div class="dash-dialog__head">
-        <div class="dash-dialog__badges">
+        <div class="dash-dialog__badges" id="task-dialog-badges" hidden>
           <span class="dash-status" id="task-dialog-status">
             <span class="dash-status__dot" aria-hidden="true"></span>
             <span id="task-dialog-status-label">In progress</span>
@@ -462,6 +525,19 @@
       </div>
 
       <div class="dash-dialog__scroll" tabindex="0" role="region" aria-label="Task details">
+        <div class="dash-dialog__loading" id="task-dialog-loading" role="status" aria-live="polite">
+          <span class="dash-spinner" aria-hidden="true"></span>
+          <p>Loading task details...</p>
+        </div>
+
+        <div class="dash-dialog__error" id="task-dialog-error" role="alert" hidden>
+          <h3>Unable to load this task.</h3>
+          <p>Please check the backend connection and try again.</p>
+          <p class="dash-error__detail" id="task-dialog-error-detail" hidden></p>
+          <button class="btn btn--primary btn--sm" id="task-dialog-retry" type="button">Try again</button>
+        </div>
+
+        <div id="task-dialog-content" hidden>
         <p class="dash-dialog__eyebrow">Internship task</p>
         <h2 id="task-dialog-title"></h2>
         <p class="dash-dialog__summary" id="task-dialog-description"></p>
@@ -491,11 +567,12 @@
           <p id="task-dialog-evidence"></p>
         </div>
 
-        <p class="dash-dialog__note">Task titles and descriptions come from the TechBridge internship task list. This dashboard uses a sample intern profile and demo progress, so the status shown here is not an official record.</p>
+        <p class="dash-dialog__note">Task data and statuses are served by the TechBridge Task API. The intern profile is sample data, so the status shown here is not an official record.</p>
+        </div>
       </div>
 
       <div class="dash-dialog__foot">
-        <button class="btn btn--primary btn--sm" id="task-dialog-action" type="button">Mark as completed</button>
+        <button class="btn btn--primary btn--sm" id="task-dialog-action" type="button" hidden disabled>Mark as completed</button>
         <button class="btn btn--ghost btn--sm" id="task-dialog-done" type="button">Close</button>
       </div>
     </div>

@@ -1304,8 +1304,9 @@
 })();
 
 /* ============================================================
-   Intern Dashboard (Task 6)
-   Task data, progress tracking, filters and task detail dialog.
+   Intern Dashboard (Task 7)
+   Loads task data from the TechBridge Task API, saves status
+   changes with PUT requests and handles loading and error states.
    ============================================================ */
 (function () {
   "use strict";
@@ -1317,202 +1318,40 @@
     return;
   }
 
-  var STORAGE_KEY = "techbridgeDashboardProgress.v1";
-  var TOTAL_TASKS = 8;
-
-  /* Official TechBridge task titles and descriptions. The focus and
-     evidence fields are guidance for this practice dashboard. */
-  var tasks = [
-    {
-      number: 1,
-      title: "Build the TechBridge Homepage",
-      day: 1,
-      description: "Create the first version of the TechBridge website using HTML and CSS.",
-      difficulty: "Beginner",
-      level: 1,
-      focus: [
-        "Page structure, header and footer",
-        "Responsive layout with flexible units",
-        "Typography, colour and button consistency"
-      ],
-      evidence: "A working homepage with a clear hero, readable sections and navigation that still works on a small screen."
-    },
-    {
-      number: 2,
-      title: "Build the TechBridge Programs Experience",
-      day: 4,
-      description: "Create a Programs experience that presents TechBridge's available learning programs.",
-      difficulty: "Beginner → Intermediate",
-      level: 2,
-      focus: [
-        "Program cards and comparison content",
-        "Clear calls to action",
-        "Responsive multi-column layout"
-      ],
-      evidence: "A Programs page that explains each pathway and guides visitors toward the application form."
-    },
-    {
-      number: 3,
-      title: "Build the Internship Tasks Experience",
-      day: 8,
-      description: "Create an interface that presents the TechBridge internship tasks and helps users understand the internship journey.",
-      difficulty: "Beginner → Intermediate",
-      level: 2,
-      focus: [
-        "Task journey and day labels",
-        "Difficulty cues without clutter",
-        "Readable cards on every screen size"
-      ],
-      evidence: "A Tasks page that shows all eight tasks, their timing and what each one involves."
-    },
-    {
-      number: 4,
-      title: "Build an Interactive Internship Roadmap",
-      day: 11,
-      description: "Use JavaScript to allow visitors to switch between the Data Analytics and Web Development internship tracks.",
-      difficulty: "Beginner → Intermediate",
-      level: 2,
-      focus: [
-        "Track switching with JavaScript",
-        "Keyboard support for the track controls",
-        "URL state and saved progress"
-      ],
-      evidence: "A roadmap where both tracks can be explored without a page refresh and progress survives a reload."
-    },
-    {
-      number: 5,
-      title: "Build the Intern Registration Experience",
-      day: 15,
-      description: "Create a professional registration and onboarding interface for TechBridge interns.",
-      difficulty: "Intermediate",
-      level: 3,
-      focus: [
-        "Form layout and field grouping",
-        "Inline validation and error messages",
-        "Onboarding copy that sets expectations"
-      ],
-      evidence: "A registration screen with labelled fields, helpful validation and a clear confirmation state."
-    },
-    {
-      number: 6,
-      title: "Build the Task Submission System",
-      day: 19,
-      description: "Create an interface through which interns can prepare and submit their task work.",
-      difficulty: "Intermediate",
-      level: 3,
-      focus: [
-        "Submission fields and file selection",
-        "Draft and confirmation states",
-        "Feedback when something is missing"
-      ],
-      evidence: "A submission interface that lets an intern attach work, review the details and confirm the handoff."
-    },
-    {
-      number: 7,
-      title: "Build the Intern Dashboard",
-      day: 22,
-      description: "Create a dashboard where an intern can view their profile, progress, tasks and submissions.",
-      difficulty: "Intermediate",
-      level: 3,
-      focus: [
-        "Progress summary and task list",
-        "Status filters and task details",
-        "Saving progress in the browser"
-      ],
-      evidence: "A dashboard that shows completed, current and upcoming work and updates without a reload."
-    },
-    {
-      number: 8,
-      title: "Build the Complete TechBridge Internship Platform",
-      day: 26,
-      description: "Combine the different components created during the internship into a complete TechBridge platform.",
-      difficulty: "Intermediate",
-      level: 3,
-      focus: [
-        "Shared navigation across every page",
-        "Final responsive and accessibility checks",
-        "One consistent design system"
-      ],
-      evidence: "A complete platform where every page is linked, visually consistent and usable on desktop, tablet and mobile."
-    }
-  ];
-
+  var API_BASE = "/api";
   var STATUS_LABELS = {
     "completed": "Completed",
     "in-progress": "In progress",
     "not-started": "Not started"
   };
 
-  function createDefaultStatuses() {
-    var defaults = {};
-    tasks.forEach(function (task) {
-      if (task.number <= 5) {
-        defaults[task.number] = "completed";
-      } else if (task.number === 6) {
-        defaults[task.number] = "in-progress";
-      } else {
-        defaults[task.number] = "not-started";
-      }
-    });
-    return defaults;
-  }
-
-  var storageAvailable = (function () {
-    try {
-      var testKey = "__techbridgeDashboardTest";
-      window.localStorage.setItem(testKey, "1");
-      window.localStorage.removeItem(testKey);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  })();
-
-  function readStatuses() {
-    var fallback = createDefaultStatuses();
-    if (!storageAvailable) {
-      return fallback;
-    }
-
-    try {
-      var raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        return fallback;
-      }
-      var parsed = JSON.parse(raw);
-      if (!parsed || typeof parsed !== "object") {
-        return fallback;
-      }
-      var valid = {};
-      var isValid = tasks.every(function (task) {
-        var value = parsed[String(task.number)];
-        if (value === "completed" || value === "in-progress" || value === "not-started") {
-          valid[task.number] = value;
-          return true;
-        }
-        return false;
-      });
-      return isValid ? valid : fallback;
-    } catch (error) {
-      return fallback;
-    }
-  }
-
-  var statuses = readStatuses();
+  var tasks = [];
   var filter = "all";
   var query = "";
-  var activeTaskNumber = null;
+  var activeTaskId = null;
   var opener = null;
   var toastTimer = null;
+  var detailToken = 0;
+  var pendingIds = {};
+  var isLoading = true;
+  var loadFailed = false;
+  var refreshInFlight = false;
 
   var searchInput = document.getElementById("task-search");
   var filterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-status-filter]"));
   var filterReset = document.getElementById("filter-reset");
   var emptyReset = document.getElementById("empty-reset");
   var emptyState = document.getElementById("task-empty");
+  var loadingState = document.getElementById("task-loading");
+  var errorState = document.getElementById("task-error");
+  var errorDetail = document.getElementById("task-error-detail");
+  var errorRetry = document.getElementById("task-error-retry");
+  var refreshButton = document.getElementById("tasks-refresh");
   var taskCount = document.getElementById("task-count");
   var progressCard = document.getElementById("progress-card");
   var progressCompleted = document.getElementById("progress-completed");
+  var progressTotal = document.getElementById("progress-total");
+  var statTotal = document.getElementById("stat-total");
   var statCompleted = document.getElementById("stat-completed");
   var statRemaining = document.getElementById("stat-remaining");
   var statPercent = document.getElementById("stat-percent");
@@ -1530,8 +1369,11 @@
   var currentTaskDay = document.getElementById("current-task-day");
   var currentTaskLevel = document.getElementById("current-task-level");
   var internshipStatus = document.getElementById("internship-status");
+  var apiStatus = document.getElementById("api-status");
+  var apiStatusLabel = document.getElementById("api-status-label");
   var toast = document.getElementById("dashboard-toast");
   var dialog = document.getElementById("task-dialog");
+  var dialogBadges = document.getElementById("task-dialog-badges");
   var dialogStatus = document.getElementById("task-dialog-status");
   var dialogStatusLabel = document.getElementById("task-dialog-status-label");
   var dialogLevel = document.getElementById("task-dialog-level");
@@ -1546,49 +1388,97 @@
   var dialogAction = document.getElementById("task-dialog-action");
   var dialogClose = document.getElementById("task-dialog-close");
   var dialogDone = document.getElementById("task-dialog-done");
+  var dialogLoading = document.getElementById("task-dialog-loading");
+  var dialogError = document.getElementById("task-dialog-error");
+  var dialogErrorDetail = document.getElementById("task-dialog-error-detail");
+  var dialogRetry = document.getElementById("task-dialog-retry");
+  var dialogContent = document.getElementById("task-dialog-content");
   var countAll = document.getElementById("count-all");
   var countCompleted = document.getElementById("count-completed");
   var countInProgress = document.getElementById("count-in-progress");
   var countNotStarted = document.getElementById("count-not-started");
   var continueButtons = Array.prototype.slice.call(document.querySelectorAll("[data-continue]"));
 
-  function getTask(number) {
-    return tasks.filter(function (task) {
-      return task.number === number;
-    })[0];
+  function formatTaskNumber(id) {
+    return "Task " + ("0" + id).slice(-2);
+  }
+
+  function normalizeTask(raw) {
+    var task = raw || {};
+    var id = Number(task.id);
+    var level = Number(task.level);
+
+    return {
+      id: id > 0 ? id : 0,
+      title: typeof task.title === "string" && task.title ? task.title : "Untitled task",
+      description: typeof task.description === "string" ? task.description : "",
+      status: STATUS_LABELS[task.status] ? task.status : "not-started",
+      day: Number(task.day) > 0 ? Number(task.day) : null,
+      difficulty: task.difficulty || "Not specified",
+      level: level >= 1 && level <= 4 ? level : 3,
+      focus: Array.isArray(task.focus) ? task.focus.map(String) : [],
+      evidence: typeof task.evidence === "string" ? task.evidence : ""
+    };
+  }
+
+  function getTask(id) {
+    for (var index = 0; index < tasks.length; index += 1) {
+      if (tasks[index].id === id) {
+        return tasks[index];
+      }
+    }
+    return null;
   }
 
   function countByStatus(status) {
     return tasks.filter(function (task) {
-      return statuses[task.number] === status;
+      return task.status === status;
     }).length;
   }
 
-  function getCompletedCount() {
-    return countByStatus("completed");
+  function apiRequest(path, options) {
+    var config = options || {};
+    config.headers = Object.assign({ "Accept": "application/json" }, config.headers || {});
+    config.cache = "no-store";
+
+    return fetch(API_BASE + path, config).then(function (response) {
+      return response.json().catch(function () {
+        return null;
+      }).then(function (body) {
+        if (!response.ok) {
+          var message = body && body.error
+            ? body.error
+            : "The API returned status " + response.status + ".";
+          var error = new Error(message);
+          error.status = response.status;
+          throw error;
+        }
+        return body;
+      });
+    });
   }
 
-  function getMetrics() {
-    var completed = getCompletedCount();
-    var remaining = TOTAL_TASKS - completed;
-    var percent = Math.round((completed / TOTAL_TASKS) * 1000) / 10;
-    return {
-      completed: completed,
-      remaining: remaining,
-      percent: percent,
-      percentText: Number.isInteger(percent) ? percent + "%" : percent.toFixed(1) + "%"
-    };
-  }
-
-  function saveStatuses() {
-    if (!storageAvailable) {
+  function setApiStatus(state, label) {
+    if (!apiStatus) {
       return;
     }
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(statuses));
-    } catch (error) {
-      storageAvailable = false;
+    apiStatus.setAttribute("data-state", state);
+    if (apiStatusLabel) {
+      apiStatusLabel.textContent = label;
     }
+  }
+
+  function setCounts(value) {
+    countAll.textContent = value;
+    countCompleted.textContent = value;
+    countInProgress.textContent = value;
+    countNotStarted.textContent = value;
+  }
+
+  function setContinueEnabled(enabled) {
+    continueButtons.forEach(function (button) {
+      button.disabled = !enabled;
+    });
   }
 
   function showToast(message) {
@@ -1600,7 +1490,88 @@
     window.clearTimeout(toastTimer);
     toastTimer = window.setTimeout(function () {
       toast.classList.remove("is-visible");
-    }, 4200);
+    }, 4600);
+  }
+
+  function showLoading() {
+    isLoading = true;
+    loadFailed = false;
+
+    grid.hidden = true;
+    grid.textContent = "";
+    emptyState.hidden = true;
+    errorState.hidden = true;
+    loadingState.hidden = false;
+    refreshButton.disabled = true;
+
+    taskCount.textContent = "Loading tasks";
+    setCounts("--");
+    progressCompleted.textContent = "--";
+    progressTotal.textContent = "/ --";
+    statTotal.textContent = "--";
+    statCompleted.textContent = "--";
+    statRemaining.textContent = "--";
+    statPercent.textContent = "--";
+    progressPercent.textContent = "--";
+    profilePercent.textContent = "--";
+    progressMessage.textContent = "Loading tasks";
+    barLabel.textContent = "Waiting for task data";
+    progressFill.style.width = "0%";
+    profileBar.style.width = "0%";
+    progressBar.setAttribute("aria-valuemax", "8");
+    progressBar.setAttribute("aria-valuenow", "0");
+    progressBar.setAttribute("aria-valuetext", "Loading tasks");
+    completeBanner.hidden = true;
+    internshipStatus.textContent = "Loading";
+
+    currentTaskLabel.textContent = "Current task";
+    currentTaskTitle.textContent = "Loading tasks...";
+    currentTaskNumber.textContent = "Task --";
+    currentTaskDay.textContent = "Day --";
+    currentTaskLevel.textContent = "Connecting";
+    setContinueEnabled(false);
+  }
+
+  function showUnavailable(error) {
+    isLoading = false;
+    loadFailed = true;
+
+    loadingState.hidden = true;
+    errorState.hidden = false;
+    grid.hidden = true;
+    grid.textContent = "";
+    emptyState.hidden = true;
+
+    if (errorDetail) {
+      errorDetail.textContent = error && error.message ? error.message : "The API did not respond.";
+      errorDetail.hidden = false;
+    }
+
+    taskCount.textContent = "Tasks unavailable";
+    setCounts("--");
+    progressCompleted.textContent = "--";
+    progressTotal.textContent = "/ --";
+    statTotal.textContent = "--";
+    statCompleted.textContent = "--";
+    statRemaining.textContent = "--";
+    statPercent.textContent = "--";
+    progressPercent.textContent = "--";
+    profilePercent.textContent = "--";
+    progressMessage.textContent = "Tasks unavailable";
+    barLabel.textContent = "Backend unavailable";
+    progressFill.style.width = "0%";
+    profileBar.style.width = "0%";
+    progressBar.setAttribute("aria-valuenow", "0");
+    progressBar.setAttribute("aria-valuetext", "Tasks unavailable");
+    completeBanner.hidden = true;
+    internshipStatus.textContent = "Unavailable";
+
+    currentTaskLabel.textContent = "Current task";
+    currentTaskTitle.textContent = "Task data unavailable";
+    currentTaskNumber.textContent = "Task --";
+    currentTaskDay.textContent = "Day --";
+    currentTaskLevel.textContent = "Offline";
+    setContinueEnabled(false);
   }
 
   function setStatusClass(element, status) {
@@ -1613,49 +1584,83 @@
     element.classList.add("level--" + level);
   }
 
+  function setContinueLabel(text) {
+    continueButtons.forEach(function (button) {
+      var arrow = button.querySelector(".btn__arrow");
+      if (!arrow) {
+        arrow = document.createElement("span");
+        arrow.className = "btn__arrow";
+        arrow.setAttribute("aria-hidden", "true");
+      }
+      button.textContent = text;
+      arrow.textContent = "→";
+      button.appendChild(arrow);
+    });
+  }
+
   function renderProgress() {
-    var metrics = getMetrics();
-    var completed = metrics.completed;
-    var remaining = metrics.remaining;
+    var total = tasks.length;
+    var completed = countByStatus("completed");
+    var remaining = total - completed;
+    var percent = total ? Math.round((completed / total) * 1000) / 10 : 0;
+    var percentText = total
+      ? (Number.isInteger(percent) ? percent + "%" : percent.toFixed(1) + "%")
+      : "--";
 
-    progressCompleted.textContent = completed;
-    statCompleted.textContent = completed;
-    statRemaining.textContent = remaining;
-    statPercent.textContent = metrics.percentText;
-    progressPercent.textContent = metrics.percentText;
-    profilePercent.textContent = metrics.percentText;
-    barLabel.textContent = completed + " of " + TOTAL_TASKS + " tasks completed";
-    progressMessage.textContent = remaining === 0
-      ? "All tasks complete"
-      : remaining === 1
-        ? "1 task remaining"
-        : remaining + " tasks remaining";
+    progressCompleted.textContent = String(completed);
+    progressTotal.textContent = "/ " + total;
+    statTotal.textContent = String(total);
+    statCompleted.textContent = String(completed);
+    statRemaining.textContent = String(remaining);
+    statPercent.textContent = percentText;
+    progressPercent.textContent = percentText;
+    profilePercent.textContent = percentText;
+    barLabel.textContent = completed + " of " + total + " tasks completed";
+    progressMessage.textContent = total === 0
+      ? "No tasks available"
+      : remaining === 0
+        ? "All tasks complete"
+        : remaining === 1
+          ? "1 task remaining"
+          : remaining + " tasks remaining";
 
-    progressFill.style.width = metrics.percent + "%";
-    profileBar.style.width = metrics.percent + "%";
+    progressFill.style.width = percent + "%";
+    profileBar.style.width = percent + "%";
 
+    progressBar.setAttribute("aria-valuemax", String(total));
     progressBar.setAttribute("aria-valuenow", String(completed));
-    progressBar.setAttribute("aria-valuetext", completed + " of " + TOTAL_TASKS + " tasks completed");
+    progressBar.setAttribute("aria-valuetext", completed + " of " + total + " tasks completed");
 
-    completeBanner.hidden = completed !== TOTAL_TASKS;
-    progressCard.classList.toggle("is-complete", completed === TOTAL_TASKS);
-    internshipStatus.textContent = completed === TOTAL_TASKS ? "Completed" : "In progress";
+    completeBanner.hidden = total === 0 || completed !== total;
+    progressCard.classList.toggle("is-complete", total > 0 && completed === total);
+    internshipStatus.textContent = completed === total ? "Completed" : "In progress";
 
-    countAll.textContent = tasks.length;
-    countCompleted.textContent = countByStatus("completed");
-    countInProgress.textContent = countByStatus("in-progress");
-    countNotStarted.textContent = countByStatus("not-started");
+    countAll.textContent = String(total);
+    countCompleted.textContent = String(completed);
+    countInProgress.textContent = String(countByStatus("in-progress"));
+    countNotStarted.textContent = String(countByStatus("not-started"));
   }
 
   function renderProfile() {
+    if (!tasks.length) {
+      currentTaskLabel.textContent = "No tasks";
+      currentTaskTitle.textContent = "The API returned no tasks.";
+      currentTaskNumber.textContent = "Task --";
+      currentTaskDay.textContent = "Day --";
+      currentTaskLevel.textContent = "Nothing to show";
+      setContinueLabel("Review tasks");
+      setContinueEnabled(false);
+      return;
+    }
+
     var current = tasks.filter(function (task) {
-      return statuses[task.number] === "in-progress";
+      return task.status === "in-progress";
     })[0];
     var label = "Current task";
 
     if (!current) {
       current = tasks.filter(function (task) {
-        return statuses[task.number] === "not-started";
+        return task.status === "not-started";
       })[0];
       label = "Next up";
     }
@@ -1663,37 +1668,25 @@
     if (current) {
       currentTaskLabel.textContent = label;
       currentTaskTitle.textContent = current.title;
-      currentTaskNumber.textContent = "Task 0" + current.number;
-      currentTaskDay.textContent = "Day " + current.day;
+      currentTaskNumber.textContent = formatTaskNumber(current.id);
+      currentTaskDay.textContent = current.day ? "Day " + current.day : "Day not set";
       currentTaskLevel.textContent = current.difficulty;
-      continueButtons.forEach(function (button) {
-        button.textContent = label === "Current task" ? "Continue current task" : "Start next task";
-        var arrow = document.createElement("span");
-        arrow.className = "btn__arrow";
-        arrow.setAttribute("aria-hidden", "true");
-        arrow.textContent = "→";
-        button.appendChild(arrow);
-      });
+      setContinueLabel(label === "Current task" ? "Continue current task" : "Start next task");
+      setContinueEnabled(true);
       return;
     }
 
     currentTaskLabel.textContent = "Program complete";
     currentTaskTitle.textContent = "Every task is complete.";
-    currentTaskNumber.textContent = "8 of 8 tasks";
+    currentTaskNumber.textContent = tasks.length + " of " + tasks.length + " tasks";
     currentTaskDay.textContent = "Build finished";
     currentTaskLevel.textContent = "Portfolio ready";
-    continueButtons.forEach(function (button) {
-      button.textContent = "Review completed tasks";
-      var arrow = document.createElement("span");
-      arrow.className = "btn__arrow";
-      arrow.setAttribute("aria-hidden", "true");
-      arrow.textContent = "→";
-      button.appendChild(arrow);
-    });
+    setContinueLabel("Review completed tasks");
+    setContinueEnabled(true);
   }
 
   function matchesFilter(task) {
-    if (filter !== "all" && statuses[task.number] !== filter) {
+    if (filter !== "all" && task.status !== filter) {
       return false;
     }
 
@@ -1701,49 +1694,22 @@
       return true;
     }
 
-    var haystack = (task.title + " " + task.description + " Task " + task.number).toLowerCase();
+    var haystack = (task.title + " " + task.description + " Task " + task.id).toLowerCase();
     return haystack.indexOf(query) !== -1;
   }
 
-  function makeButtonFocusable(number) {
-    var button = grid.querySelector('[data-number="' + number + '"] [data-toggle]');
+  function focusToggle(id) {
+    var button = grid.querySelector('[data-number="' + id + '"] [data-toggle]');
     if (button) {
       button.focus();
-      return;
-    }
-    var activeChip = document.querySelector('[data-status-filter="' + filter + '"]');
-    if (activeChip) {
-      activeChip.focus();
-    }
-  }
-
-  function toggleStatus(number, source) {
-    var task = getTask(number);
-    if (!task) {
-      return;
-    }
-
-    if (statuses[number] === "completed") {
-      statuses[number] = "in-progress";
-      showToast("Task " + number + " reopened and marked in progress.");
-    } else {
-      statuses[number] = "completed";
-      showToast("Task " + number + " marked complete. " + getCompletedCount() + " of " + TOTAL_TASKS + " done.");
-    }
-
-    saveStatuses();
-    render();
-
-    if (source === "card") {
-      makeButtonFocusable(number);
-    }
-
-    if (dialog.open && activeTaskNumber === number) {
-      populateDialog(task);
     }
   }
 
   function render() {
+    if (isLoading || loadFailed) {
+      return;
+    }
+
     renderProgress();
     renderProfile();
 
@@ -1752,33 +1718,41 @@
 
     visible.forEach(function (task) {
       var card = template.content.firstElementChild.cloneNode(true);
-      var status = statuses[task.number];
+      var pending = Boolean(pendingIds[task.id]);
 
-      card.setAttribute("data-number", String(task.number));
-      card.setAttribute("data-status", status);
-      card.querySelector('[data-field="number"]').textContent = "Task 0" + task.number;
+      card.setAttribute("data-number", String(task.id));
+      card.setAttribute("data-status", task.status);
+      card.querySelector('[data-field="number"]').textContent = formatTaskNumber(task.id);
       card.querySelector('[data-field="title"]').textContent = task.title;
       card.querySelector('[data-field="description"]').textContent = task.description;
-      card.querySelector('[data-field="day"]').textContent = "Introduced on Day " + task.day;
+      card.querySelector('[data-field="day"]').textContent = task.day
+        ? "Introduced on Day " + task.day
+        : "Day not set";
       card.querySelector('[data-field="difficulty"]').textContent = task.difficulty;
       card.querySelector('[data-field="view-label"]').textContent = task.title;
-      card.querySelector('[data-field="status-label"]').textContent = STATUS_LABELS[status];
+      card.querySelector('[data-field="status-label"]').textContent = STATUS_LABELS[task.status];
 
       var statusBadge = card.querySelector('[data-field="status"]');
-      setStatusClass(statusBadge, status);
+      setStatusClass(statusBadge, task.status);
       setLevel(card.querySelector('[data-field="level"]'), task.level);
 
+      var viewButton = card.querySelector("[data-view]");
       var toggle = card.querySelector("[data-toggle]");
-      toggle.textContent = status === "completed" ? "Reopen" : "Mark complete";
-      toggle.setAttribute("aria-label", (status === "completed" ? "Reopen " : "Mark complete: ") + task.title);
-      toggle.setAttribute("data-toggle-number", String(task.number));
+      toggle.textContent = pending
+        ? "Saving..."
+        : task.status === "completed"
+          ? "Reopen"
+          : "Mark complete";
+      toggle.disabled = pending;
+      toggle.setAttribute("aria-label", (task.status === "completed" ? "Reopen " : "Mark complete: ") + task.title);
+      toggle.setAttribute("data-toggle-number", String(task.id));
 
-      card.querySelector("[data-view]").addEventListener("click", function (event) {
-        openTask(task.number, event.currentTarget);
+      viewButton.addEventListener("click", function (event) {
+        openTask(task.id, event.currentTarget);
       });
 
       toggle.addEventListener("click", function () {
-        toggleStatus(task.number, "card");
+        updateTaskStatus(task.id, "card");
       });
 
       grid.appendChild(card);
@@ -1786,7 +1760,7 @@
 
     grid.hidden = visible.length === 0;
     emptyState.hidden = visible.length !== 0;
-    taskCount.innerHTML = "<strong>" + visible.length + "</strong> of " + TOTAL_TASKS + " tasks";
+    taskCount.innerHTML = "<strong>" + visible.length + "</strong> of " + tasks.length + " tasks";
 
     filterButtons.forEach(function (button) {
       var isActive = button.getAttribute("data-status-filter") === filter;
@@ -1798,39 +1772,149 @@
     filterReset.setAttribute("aria-disabled", String(filtersAreDefault));
   }
 
-  function populateDialog(task) {
-    var status = statuses[task.number];
+  function loadTasks(options) {
+    var opts = options || {};
+    if (refreshInFlight) {
+      return;
+    }
 
-    dialogStatusLabel.textContent = STATUS_LABELS[status];
-    setStatusClass(dialogStatus, status);
+    refreshInFlight = true;
+    showLoading();
+    if (errorDetail) {
+      errorDetail.hidden = true;
+    }
+    setApiStatus("connecting", "Connecting");
+
+    apiRequest("/tasks")
+      .then(function (payload) {
+        var list = Array.isArray(payload)
+          ? payload
+          : payload && Array.isArray(payload.tasks)
+            ? payload.tasks
+            : [];
+
+        tasks = list.map(normalizeTask).filter(function (task) {
+          return task.id > 0;
+        });
+        isLoading = false;
+        loadFailed = false;
+        loadingState.hidden = true;
+        errorState.hidden = true;
+        setApiStatus("connected", "Connected");
+        render();
+        if (opts.announce) {
+          showToast("Tasks refreshed from the Task API.");
+        }
+      })
+      .catch(function (error) {
+        tasks = [];
+        isLoading = false;
+        loadFailed = true;
+        showUnavailable(error);
+        setApiStatus("offline", "Offline");
+      })
+      .then(function () {
+        refreshInFlight = false;
+        refreshButton.disabled = false;
+      });
+  }
+
+  function populateDialog(task) {
+    var pending = Boolean(pendingIds[task.id]);
+
+    dialogStatusLabel.textContent = STATUS_LABELS[task.status];
+    setStatusClass(dialogStatus, task.status);
     dialogDifficulty.textContent = task.difficulty;
     setLevel(dialogLevel, task.level);
     dialogTitle.textContent = task.title;
-    dialogDescription.textContent = task.description;
-    dialogNumber.textContent = "Task 0" + task.number;
-    dialogDay.textContent = "Day " + task.day;
-    dialogStatusText.textContent = STATUS_LABELS[status];
+    dialogDescription.textContent = task.description || "No description was provided.";
+    dialogNumber.textContent = formatTaskNumber(task.id);
+    dialogDay.textContent = task.day ? "Day " + task.day : "Day not set";
+    dialogStatusText.textContent = STATUS_LABELS[task.status];
 
     dialogFocus.textContent = "";
-    task.focus.forEach(function (item) {
+    var focus = task.focus.length ? task.focus : ["No focus points were provided."];
+    focus.forEach(function (item) {
       var li = document.createElement("li");
       li.textContent = item;
       dialogFocus.appendChild(li);
     });
-    dialogEvidence.textContent = task.evidence;
 
-    dialogAction.textContent = status === "completed" ? "Reopen task" : "Mark as completed";
-    dialogAction.setAttribute("data-number", String(task.number));
+    dialogEvidence.textContent = task.evidence || "No evidence guidance was provided.";
+    dialogAction.textContent = pending
+      ? "Saving..."
+      : task.status === "completed"
+        ? "Reopen task"
+        : "Mark as completed";
+    dialogAction.disabled = pending;
+    dialogAction.setAttribute("data-number", String(task.id));
   }
 
-  function openTask(number, trigger) {
-    var task = getTask(number);
-    if (!task) {
+  function showDialogLoading() {
+    dialogLoading.hidden = false;
+    dialogError.hidden = true;
+    dialogContent.hidden = true;
+    dialogBadges.hidden = true;
+    dialogAction.hidden = true;
+    dialogAction.disabled = true;
+    if (dialogErrorDetail) {
+      dialogErrorDetail.hidden = true;
+    }
+  }
+
+  function loadTaskDetail(id, token) {
+    apiRequest("/tasks/" + id)
+      .then(function (raw) {
+        if (token !== detailToken || activeTaskId !== id) {
+          return;
+        }
+
+        var task = normalizeTask(raw);
+        tasks = tasks.map(function (item) {
+          return item.id === id ? task : item;
+        });
+        render();
+        populateDialog(task);
+
+        dialogLoading.hidden = true;
+        dialogError.hidden = true;
+        dialogContent.hidden = false;
+        dialogBadges.hidden = false;
+        dialogAction.hidden = false;
+        dialogAction.disabled = Boolean(pendingIds[id]);
+        setApiStatus("connected", "Connected");
+      })
+      .catch(function (error) {
+        if (token !== detailToken) {
+          return;
+        }
+
+        dialogLoading.hidden = true;
+        dialogContent.hidden = true;
+        dialogBadges.hidden = true;
+        dialogAction.hidden = true;
+        dialogError.hidden = false;
+        if (dialogErrorDetail) {
+          dialogErrorDetail.textContent = error.message || "The API did not respond.";
+          dialogErrorDetail.hidden = false;
+        }
+        if (!error.status) {
+          setApiStatus("offline", "Offline");
+        }
+      });
+  }
+
+  function openTask(id, trigger) {
+    if (!getTask(id)) {
       return;
     }
-    activeTaskNumber = number;
+
+    activeTaskId = id;
     opener = trigger || null;
-    populateDialog(task);
+    detailToken += 1;
+    var token = detailToken;
+
+    showDialogLoading();
     if (typeof dialog.showModal === "function") {
       dialog.showModal();
     } else {
@@ -1838,6 +1922,7 @@
     }
     document.body.classList.add("dialog-open");
     dialogClose.focus();
+    loadTaskDetail(id, token);
   }
 
   function closeDialog() {
@@ -1855,8 +1940,8 @@
       opener.focus();
       return;
     }
-    if (activeTaskNumber !== null) {
-      var view = grid.querySelector('[data-number="' + activeTaskNumber + '"] [data-view]');
+    if (activeTaskId !== null) {
+      var view = grid.querySelector('[data-number="' + activeTaskId + '"] [data-view]');
       if (view) {
         view.focus();
         return;
@@ -1867,6 +1952,62 @@
       heading.setAttribute("tabindex", "-1");
       heading.focus();
     }
+  }
+
+  function updateTaskStatus(id, source) {
+    var task = getTask(id);
+    if (!task || pendingIds[id]) {
+      return;
+    }
+
+    var target = task.status === "completed" ? "in-progress" : "completed";
+    pendingIds[id] = true;
+
+    if (source === "card") {
+      render();
+      focusToggle(id);
+    } else if (dialog.open && activeTaskId === id) {
+      dialogAction.disabled = true;
+      dialogAction.textContent = "Saving...";
+    }
+
+    apiRequest("/tasks/" + id, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: target })
+    })
+      .then(function (saved) {
+        tasks = tasks.map(function (item) {
+          return item.id === id ? normalizeTask(saved) : item;
+        });
+        setApiStatus("connected", "Connected");
+        showToast(target === "completed"
+          ? formatTaskNumber(id) + " marked complete. " + countByStatus("completed") + " of " + tasks.length + " done."
+          : formatTaskNumber(id) + " reopened and marked in progress.");
+      })
+      .catch(function (error) {
+        if (error.status) {
+          setApiStatus("connected", "Connected");
+        } else {
+          setApiStatus("offline", "Offline");
+        }
+        showToast("Could not update the task. " + (error.message || "Check the backend connection."));
+      })
+      .then(function () {
+        delete pendingIds[id];
+        render();
+
+        if (dialog.open && activeTaskId === id) {
+          var updated = getTask(id);
+          if (updated) {
+            populateDialog(updated);
+          }
+        }
+
+        if (source === "card") {
+          focusToggle(id);
+        }
+      });
   }
 
   function resetFilters() {
@@ -1910,34 +2051,36 @@
     });
   }
 
-  var resetButton = document.getElementById("progress-reset");
-  if (resetButton) {
-    resetButton.addEventListener("click", function () {
-      var shouldReset = window.confirm("Reset the demo progress for all eight tasks?");
-      if (!shouldReset) {
-        return;
-      }
-      statuses = createDefaultStatuses();
-      saveStatuses();
-      render();
-      showToast("Demo progress reset to the starting state.");
+  if (refreshButton) {
+    refreshButton.addEventListener("click", function () {
+      loadTasks({ announce: true });
+    });
+  }
+
+  if (errorRetry) {
+    errorRetry.addEventListener("click", function () {
+      loadTasks();
     });
   }
 
   continueButtons.forEach(function (button) {
     button.addEventListener("click", function () {
+      if (isLoading || loadFailed || !tasks.length) {
+        return;
+      }
+
       var current = tasks.filter(function (task) {
-        return statuses[task.number] === "in-progress";
+        return task.status === "in-progress";
       })[0];
 
       if (!current) {
         current = tasks.filter(function (task) {
-          return statuses[task.number] === "not-started";
+          return task.status === "not-started";
         })[0];
       }
 
       if (current) {
-        openTask(current.number, button);
+        openTask(current.id, button);
         return;
       }
 
@@ -1959,22 +2102,35 @@
   });
 
   dialogAction.addEventListener("click", function () {
-    if (activeTaskNumber !== null) {
-      toggleStatus(activeTaskNumber, "dialog");
+    if (activeTaskId !== null) {
+      updateTaskStatus(activeTaskId, "dialog");
     }
   });
 
   dialogClose.addEventListener("click", closeDialog);
   dialogDone.addEventListener("click", closeDialog);
 
+  if (dialogRetry) {
+    dialogRetry.addEventListener("click", function () {
+      if (activeTaskId === null) {
+        return;
+      }
+      detailToken += 1;
+      showDialogLoading();
+      loadTaskDetail(activeTaskId, detailToken);
+    });
+  }
+
   dialog.addEventListener("close", function () {
+    detailToken += 1;
     document.body.classList.remove("dialog-open");
     restoreFocus();
-    activeTaskNumber = null;
+    activeTaskId = null;
     opener = null;
   });
 
-  render();
+  setApiStatus("connecting", "Connecting");
+  loadTasks();
 })();
 
 /* ============================================================

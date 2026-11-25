@@ -6822,3 +6822,374 @@ body.dialog-open {
     transition: none;
   }
 }
+
+/* ============================================================
+   Task 7: API states and endpoint documentation
+   ============================================================ */
+
+/* ---------- Backend status beside the internship status ---------- */
+.dash-hero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.35rem;
+}
+
+.dash-hero__badges .dash-hero__status {
+  margin: 0;
+}
+
+.dash-api {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.dash-api strong {
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.dash-api__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #a19fae;
+  box-shadow: 0 0 0 3px rgba(161, 159, 174, 0.16);
+}
+
+.dash-api[data-state="connecting"] {
+  border-color: rgba(160, 92, 6, 0.24);
+  background: #fdf0d7;
+  color: #8b4f05;
+}
+
+.dash-api[data-state="connecting"] .dash-api__dot {
+  background: #a05c06;
+  box-shadow: 0 0 0 3px rgba(160, 92, 6, 0.16);
+}
+
+.dash-api[data-state="connected"] {
+  border-color: rgba(22, 114, 74, 0.22);
+  background: #e8f4ee;
+  color: #135c3d;
+}
+
+.dash-api[data-state="connected"] .dash-api__dot {
+  background: #1c8a5c;
+  box-shadow: 0 0 0 3px rgba(28, 138, 92, 0.14);
+}
+
+.dash-api[data-state="offline"] {
+  border-color: rgba(180, 35, 24, 0.24);
+  background: #fdecea;
+  color: #8a2b22;
+}
+
+.dash-api[data-state="offline"] .dash-api__dot {
+  background: #b42318;
+  box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.14);
+}
+
+/* ---------- Loading and error states ---------- */
+@keyframes dash-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dash-spinner {
+  flex: none;
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 2px solid rgba(61, 70, 232, 0.18);
+  border-top-color: var(--indigo);
+  border-radius: 50%;
+  animation: dash-spin 0.8s linear infinite;
+}
+
+.dash-loading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.4rem 1.5rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.dash-loading[hidden] {
+  display: none;
+}
+
+.dash-loading strong {
+  display: block;
+  color: var(--navy);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.dash-loading p {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.dash-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.35rem 1.5rem;
+  border: 1px solid rgba(180, 35, 24, 0.24);
+  border-radius: 18px;
+  background: #fff7f6;
+}
+
+.dash-error[hidden] {
+  display: none;
+}
+
+.dash-error__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: #b42318;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.dash-error__copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dash-error h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.dash-error p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.dash-error__detail {
+  margin-top: 0.4rem !important;
+  color: #8a2b22 !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem !important;
+  overflow-wrap: anywhere;
+}
+
+.dash-error .btn {
+  flex: none;
+}
+
+.dash-error__detail[hidden] {
+  display: none;
+}
+
+/* ---------- Disabled actions ---------- */
+.btn:disabled,
+.btn:disabled:hover {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.dash-reset:disabled {
+  color: rgba(19, 16, 52, 0.34);
+  text-decoration: none;
+  cursor: default;
+}
+
+.dash-reset:disabled:hover {
+  color: rgba(19, 16, 52, 0.34);
+}
+
+/* ---------- Endpoint documentation ---------- */
+.dash-api-section {
+  padding: clamp(1.5rem, 3vw, 2.25rem) 0 clamp(2.5rem, 4vw, 3.5rem);
+}
+
+.api-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.api-card {
+  padding: 1.2rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 14px 34px rgba(19, 16, 52, 0.04);
+}
+
+.api-card__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.65rem;
+}
+
+.api-method {
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  background: #e8f4ee;
+  color: #135c3d;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.api-method--put {
+  background: #fdf0d7;
+  color: #8b4f05;
+}
+
+.api-card code,
+.api-foot code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.api-card code {
+  color: var(--navy);
+}
+
+.api-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.api-foot {
+  margin: 1.1rem 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.65;
+}
+
+.api-foot code {
+  color: var(--navy);
+  font-size: 0.76rem;
+}
+
+.api-foot a {
+  color: var(--indigo-dark);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.api-foot a:hover {
+  color: var(--navy);
+}
+
+/* ---------- Dialog loading and error states ---------- */
+.btn[hidden] {
+  display: none;
+}
+
+.dash-dialog__badges[hidden] {
+  display: none;
+}
+
+.dash-dialog__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  min-height: 12rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.dash-dialog__loading[hidden] {
+  display: none;
+}
+
+.dash-dialog__loading p {
+  margin: 0;
+}
+
+.dash-dialog__error {
+  padding: 0.4rem 0 1rem;
+}
+
+.dash-dialog__error[hidden] {
+  display: none;
+}
+
+.dash-dialog__error h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+}
+
+.dash-dialog__error p {
+  margin: 0 0 0.6rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.dash-dialog__error .btn {
+  margin-top: 0.35rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .api-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .api-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dash-loading {
+    align-items: flex-start;
+  }
+
+  .dash-error {
+    flex-wrap: wrap;
+    padding: 1.15rem;
+  }
+
+  .dash-error .btn {
+    width: 100%;
+  }
+
+  .dash-dialog__loading {
+    min-height: 10rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash-spinner {
+    animation: none;
+  }
+}

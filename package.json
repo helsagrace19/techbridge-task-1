@@ -1,0 +1,16 @@
+{
+  "name": "techbridge-internship-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TechBridge website with a Task Management API for the Intern Dashboard.",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
