@@ -148,7 +148,7 @@ Deployed via Vercel: https://techbridge-task-1-plum.vercel.app
 
 The Programs page is available at `/programs.html`, the Internship Tasks page at `/tasks.html`, the Interactive Internship Roadmap at `/roadmap.html`, the Challenge Hub at `/challenges.html` and the Intern Dashboard at `/dashboard.html` on the same deployment.
 
-The same deployment serves the API through small route files in `api/`, so the live dashboard can use relative `/api/tasks` requests without a separate API host. Serverless functions have a read-only filesystem and no shared database, so live status changes are kept in memory for the life of a warm function instance and reset after a cold start. The local Express server is the version that writes changes back to `backend/data/tasks.json`.
+The same deployment serves the API through small route files in `api/`, so the live dashboard can use relative `/api/tasks` requests without a separate API host. Serverless functions have a read-only filesystem and no shared database, so live status changes are kept in memory for the life of a warm function instance and may reset when a different instance or a cold start handles a later request. The local Express server is the durable version: it writes changes back to `backend/data/tasks.json`, so they survive a restart.
 
 ## Task 7 screenshots
 
