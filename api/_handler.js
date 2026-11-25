@@ -12,30 +12,37 @@ function send(res, status, body) {
 }
 
 /* Vercel's standalone Node runtime does not always populate req.query
-   for a catch-all route, so fall back to the request URL. */
+   for dynamic routes, so fall back to the request URL and the id param. */
 function pathSegments(req) {
   const raw = req.query && req.query.path;
+  let parts;
+
   if (Array.isArray(raw) && raw.length) {
-    return raw.map(String);
-  }
-  if (typeof raw === "string" && raw) {
-    return [raw];
-  }
+    parts = raw.map(String);
+  } else if (typeof raw === "string" && raw) {
+    parts = [raw];
+  } else {
+    const rawUrl = req.url || "";
+    const queryIndex = rawUrl.indexOf("?");
+    const pathname = queryIndex === -1 ? rawUrl : rawUrl.slice(0, queryIndex);
+    parts = pathname.split("/").filter(Boolean).map((part) => {
+      try {
+        return decodeURIComponent(part);
+      } catch (error) {
+        return part;
+      }
+    });
 
-  const rawUrl = req.url || "";
-  const queryIndex = rawUrl.indexOf("?");
-  const pathname = queryIndex === -1 ? rawUrl : rawUrl.slice(0, queryIndex);
-  const parts = pathname.split("/").filter(Boolean).map((part) => {
-    try {
-      return decodeURIComponent(part);
-    } catch (error) {
-      return part;
+    if (parts[0] === "api") {
+      parts.shift();
     }
-  });
-
-  if (parts[0] === "api") {
-    parts.shift();
   }
+
+  const id = req.query && req.query.id;
+  if (id && parts[0] === "tasks" && (parts.length === 1 || parts[1] === "[id]")) {
+    parts[1] = String(id);
+  }
+
   return parts;
 }
 
