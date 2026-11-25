@@ -376,6 +376,127 @@ ol {
   font-weight: 600;
 }
 
+/* ---------- Grouped Internship navigation ---------- */
+.nav-group {
+  position: relative;
+}
+
+.nav-group__toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0;
+  border: 0;
+  background: transparent;
+  color: rgba(19, 16, 52, 0.72);
+  font-family: var(--font-sans);
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: inherit;
+  cursor: pointer;
+}
+
+.nav-group__toggle::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--indigo);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s var(--ease);
+}
+
+.nav-group__toggle:hover,
+.nav-group__toggle[aria-expanded="true"] {
+  color: var(--ink);
+}
+
+.nav-group__toggle:hover::after,
+.nav-group__toggle:focus-visible::after,
+.nav-group__toggle.is-active::after {
+  transform: scaleX(1);
+}
+
+.nav-group__toggle.is-active {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.nav-group__chevron {
+  width: 0.38rem;
+  height: 0.38rem;
+  margin-top: -0.18rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s var(--ease), margin-top 0.2s var(--ease);
+}
+
+.nav-group__toggle[aria-expanded="true"] .nav-group__chevron {
+  margin-top: 0.18rem;
+  transform: rotate(225deg);
+}
+
+.nav-group__menu {
+  position: absolute;
+  top: calc(100% + 0.65rem);
+  right: 0;
+  z-index: 120;
+  display: grid;
+  gap: 0.1rem;
+  min-width: 13rem;
+  max-width: calc(100vw - 2rem);
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: 0 18px 44px rgba(19, 16, 52, 0.14);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.18s ease, transform 0.18s var(--ease), visibility 0.18s;
+}
+
+.nav-group.is-open .nav-group__menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.nav-group__menu a {
+  display: block;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  color: rgba(19, 16, 52, 0.72);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-group__menu a::after {
+  display: none;
+}
+
+.nav-group__menu a:hover,
+.nav-group__menu a:focus-visible {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.nav-group__menu a.is-active {
+  background: rgba(61, 70, 232, 0.08);
+  color: var(--indigo-dark);
+  font-weight: 600;
+}
+
 .nav-cta {
   display: none;
 }
@@ -1298,6 +1419,40 @@ ol {
 
   .nav-list a::after {
     display: none;
+  }
+
+  .nav-group__toggle {
+    display: none;
+  }
+
+  .nav-group__menu {
+    position: static;
+    display: flex;
+    visibility: visible;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .nav-group__menu a {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    font-size: 1rem;
+  }
+
+  .nav-group__menu a.is-active {
+    background: transparent;
   }
 
   .nav-cta {
@@ -4085,28 +4240,12 @@ ol {
   }
 }
 
-/* Eight navigation items need a little more room on mid-size desktops */
+/* Keep the header usable when text is enlarged */
 @media (min-width: 981px) {
   .nav-list {
     flex-wrap: wrap;
     justify-content: center;
     row-gap: 4px;
-  }
-}
-
-@media (min-width: 1261px) {
-  .nav-list {
-    column-gap: 27px;
-  }
-}
-
-@media (min-width: 981px) and (max-width: 1260px) {
-  .nav-list {
-    column-gap: clamp(9px, 1.15vw, 15px);
-  }
-
-  .nav-list a {
-    font-size: 0.79rem;
   }
 }
 
@@ -5212,19 +5351,6 @@ body.dialog-open {
    Intern Dashboard page (Task 6)
    Shares the TechBridge tokens, header, buttons and footer.
    ============================================================ */
-
-/* ---------- Header room for nine navigation items ---------- */
-@media (max-width: 1100px) and (min-width: 981px) {
-  .brand__tagline {
-    display: none;
-  }
-}
-
-@media (min-width: 1261px) {
-  .nav-list {
-    column-gap: 24px;
-  }
-}
 
 /* ---------- Shared dashboard labels ---------- */
 .dash-eyebrow {

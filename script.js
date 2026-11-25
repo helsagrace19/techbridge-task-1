@@ -6,9 +6,19 @@
   var nav = document.getElementById("primary-nav");
   var header = document.querySelector(".site-header");
   var backdrop = document.querySelector(".nav-backdrop");
+  var group = nav ? nav.querySelector("[data-nav-group]") : null;
+  var groupToggle = group ? group.querySelector(".nav-group__toggle") : null;
 
   if (!toggle || !nav) {
     return;
+  }
+
+  function setGroupOpen(open) {
+    if (!group || !groupToggle) {
+      return;
+    }
+    group.classList.toggle("is-open", open);
+    groupToggle.setAttribute("aria-expanded", String(open));
   }
 
   function setOpen(open) {
@@ -16,6 +26,10 @@
     toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     nav.classList.toggle("is-open", open);
     document.body.classList.toggle("nav-open", open);
+
+    if (!open) {
+      setGroupOpen(false);
+    }
 
     if (toggleText) {
       toggleText.textContent = open ? "Close" : "Menu";
@@ -37,9 +51,36 @@
 
   nav.addEventListener("click", function (event) {
     if (event.target.closest("a")) {
+      setGroupOpen(false);
       setOpen(false);
     }
   });
+
+  if (group && groupToggle) {
+    groupToggle.addEventListener("click", function () {
+      setGroupOpen(groupToggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    group.addEventListener("focusout", function (event) {
+      if (!group.contains(event.relatedTarget)) {
+        setGroupOpen(false);
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && group.classList.contains("is-open")) {
+        event.stopPropagation();
+        setGroupOpen(false);
+        groupToggle.focus();
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      if (group.classList.contains("is-open") && !group.contains(event.target)) {
+        setGroupOpen(false);
+      }
+    });
+  }
 
   if (backdrop) {
     backdrop.addEventListener("click", function () {

@@ -191,7 +191,7 @@ Both are full-page desktop captures at 1440px wide.
 
 ## Responsive behaviour
 
-- **Desktop (≥ 981px):** two-column heroes, two-column program cards, a two-column Tasks journey with a sticky introduction, and a two-column roadmap task grid. The challenge library uses four cards per row with the filter toolbar beside the search field. The dashboard uses a two-column welcome and task grid, a four-part progress summary, a three-column endpoint reference and a tabbed technology panel. The nine navigation items tighten their spacing, and the brand tagline steps aside between 981px and 1100px, so the header stays on one line.
+- **Desktop (≥ 981px):** two-column heroes, two-column program cards, a two-column Tasks journey with a sticky introduction, and a two-column roadmap task grid. The challenge library uses four cards per row with the filter toolbar beside the search field. The dashboard uses a two-column welcome and task grid, a four-part progress summary, a three-column endpoint reference and a tabbed technology panel. The header groups Tasks, Roadmap and Challenges under one Internship menu, so six top-level items and the brand tagline stay on one line.
 - **Tablet (641–980px):** two-column hero, journey and roadmap layouts that fill the width, key figures spread across three columns, program cards and comparison panels side by side, call to action buttons in a full-width row, a two-column footer, and the mobile navigation. The challenge hero stacks, the filters move below the search field and the challenge grid drops to two columns. The dashboard hero stacks, the progress summary moves below the large total, the task grid keeps two columns and the endpoint reference drops to two columns.
 - **Mobile (≤ 640px):** single-column content that uses the full width, full-width buttons, a single-column track switcher and task list, a compact 30-day grid, two-column "Why TechBridge" feature grid, a single-column difficulty legend, and a full-height off-canvas menu that slides in from the right over a blurred backdrop. Challenge cards become a single column, the filters stack, and the challenge dialog becomes a full-width bottom sheet. The dashboard becomes a single column, its progress figures form a 2 by 2 grid, task cards and endpoint cards stack, and the task dialog becomes a full-width bottom sheet.
 
@@ -201,6 +201,7 @@ Both are full-page desktop captures at 1440px wide.
 - Visible keyboard focus states, including a focus outline on linked program cards, route links and track controls
 - "Skip to main content" link
 - Mobile menu updates `aria-expanded`, closes with Escape and restores focus to the toggle
+- The Internship menu is a disclosure button with `aria-expanded`, closes on Escape, an outside click or focus leaving the group, and marks the current section with `aria-current`
 - The blurred menu backdrop is hidden from assistive technology; the menu can also be dismissed by tapping it
 - The track switcher uses ARIA tabs with roving `tabindex` and Arrow Left, Arrow Right, Home and End keyboard support
 - Track changes update a polite `role="status"` live region, the visible "Currently viewing" label and the panel's accessible name

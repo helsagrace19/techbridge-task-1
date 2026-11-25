@@ -35,10 +35,18 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="index.html#about">About</a></li>
           <li><a href="programs.html">Programs</a></li>
-          <li><a href="index.html#internship">Internship</a></li>
-          <li><a href="tasks.html">Tasks</a></li>
-          <li><a href="roadmap.html" class="is-active" aria-current="page">Roadmap</a></li>
-          <li><a href="challenges.html">Challenges</a></li>
+          <li class="nav-group" data-nav-group>
+            <button class="nav-group__toggle is-active" type="button" aria-expanded="false" aria-controls="internship-menu">
+              Internship
+              <span class="nav-group__chevron" aria-hidden="true"></span>
+            </button>
+            <ul class="nav-group__menu" id="internship-menu">
+              <li><a href="index.html#internship">Internship overview</a></li>
+              <li><a href="tasks.html">Tasks</a></li>
+              <li><a href="roadmap.html" class="is-active" aria-current="page">Roadmap</a></li>
+              <li><a href="challenges.html">Challenges</a></li>
+            </ul>
+          </li>
           <li><a href="dashboard.html">Dashboard</a></li>
           <li><a href="index.html#contact">Contact</a></li>
         </ul>
